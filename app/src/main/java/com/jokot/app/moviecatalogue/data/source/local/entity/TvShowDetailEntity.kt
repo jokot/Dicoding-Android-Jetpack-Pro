@@ -6,9 +6,9 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class TvShowDetailEntity(
     val backdropPath: String?,
-    val episodeRunTime: List<Int>,
+    val episodeRunTime: String,
     val firstAirDate: String,
-    val genres: List<GenreEntity>,
+    val genres: List<String>,
     val homepage: String,
     val id: Int,
     val inProduction: Boolean,
@@ -26,6 +26,6 @@ data class TvShowDetailEntity(
     val status: String,
     val tagline: String,
     val type: String,
-    val voteAverage: Double,
+    val voteAverage: Int,
     val voteCount: Int
 ) : Parcelable

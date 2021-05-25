@@ -8,7 +8,7 @@ data class MovieDetailEntity(
     val adult: Boolean,
     val backdropPath: String?,
     val budget: Int,
-    val genres: List<GenreEntity>,
+    val genres: List<String>,
     val homepage: String?,
     val id: Int,
     val imdbId: String?,
@@ -19,11 +19,11 @@ data class MovieDetailEntity(
     val posterPath: String?,
     val releaseDate: String,
     val revenue: Int,
-    val runtime: Int?,
+    val duration: String,
     val status: String,
     val tagline: String?,
     val title: String,
     val video: Boolean,
-    val voteAverage: Double,
+    val voteAverage: Int,
     val voteCount: Int
 ) : Parcelable

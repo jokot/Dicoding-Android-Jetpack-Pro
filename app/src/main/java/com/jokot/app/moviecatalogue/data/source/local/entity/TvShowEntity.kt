@@ -10,6 +10,6 @@ data class TvShowEntity(
     val overview: String,
     val releaseDate: String,
     val score: Int,
-    val posterPath: String,
-    val bannerPath: String
+    val posterPath: String?,
+    val bannerPath: String?
 ) : Parcelable
