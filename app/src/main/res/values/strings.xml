@@ -1,9 +1,10 @@
 <resources>
     <string name="app_name">Movie Catalogue</string>
-    <string name="title_detail_film_activity">Detail Film</string>
+    <string name="title_detail_movie_activity">Detail Movie</string>
+    <string name="title_detail_tv_show_activity">Detail Tv Show</string>
     <string name="movies">Movies</string>
     <string name="tv_shows">Tv Shows</string>
-    <string name="release_date">Release Date</string>
+    <string name="release_date">Release</string>
     <string name="overview">Overview</string>
     <string name="title">Title</string>
     <string name="very_long_string">very long stringvery long string very long string very long string very long string very long string very long string very long string very long string very long string very long string</string>
@@ -12,4 +13,10 @@
     <string name="score">Score</string>
     <string name="user_score">User Score</string>
     <string name="year">Year</string>
+    <string name="now_playing">Now Playing</string>
+    <string name="popular">Popular</string>
+    <string name="top_rated">Top Rated</string>
+    <string name="upcoming">Upcoming</string>
+    <string name="on_air">On Air</string>
+    <string name="airing_today">Airing Today</string>
 </resources>
