@@ -13,19 +13,27 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MovieCatalogue"
         tools:ignore="GoogleAppIndexingWaring">
-
         <activity
-            android:name=".ui.detail.DetailFilmActivity"
-            android:label="@string/title_detail_film_activity"
+            android:name=".ui.detail.tv.DetailTvShowActivity"
+            android:label="@string/title_detail_tv_show_activity"
             android:parentActivityName=".ui.home.HomeActivity"
             android:theme="@style/Theme.MovieCatalogue.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.home.HomeActivity" />
-
+        </activity>
+        <activity
+            android:name=".ui.detail.movie.DetailMovieActivity"
+            android:label="@string/title_detail_movie_activity"
+            android:parentActivityName=".ui.home.HomeActivity"
+            android:theme="@style/Theme.MovieCatalogue.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.home.HomeActivity" />
         </activity>
         <activity
             android:name=".ui.home.HomeActivity"
+            android:launchMode="singleTop"
             android:theme="@style/Theme.MovieCatalogue.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
