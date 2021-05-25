@@ -7,17 +7,20 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.jokot.app.moviecatalogue.R
-import com.jokot.app.moviecatalogue.data.FilmEntity
+import com.jokot.app.moviecatalogue.data.source.local.entity.ImagesEntity
+import com.jokot.app.moviecatalogue.data.source.local.entity.TvShowEntity
 import com.jokot.app.moviecatalogue.databinding.ItemsTvShowBinding
-import com.jokot.app.moviecatalogue.ui.detail.DetailFilmActivity
+import com.jokot.app.moviecatalogue.ui.detail.tv.DetailTvShowActivity
 
 class TvShowAdapter : RecyclerView.Adapter<TvShowAdapter.TvShowViewHolder>() {
-    private val listFilms = ArrayList<FilmEntity>()
+    private val listTvShows = ArrayList<TvShowEntity>()
+    private lateinit var images: ImagesEntity
 
-    fun setFilms(films: List<FilmEntity>?) {
-        if (films.isNullOrEmpty()) return
-        this.listFilms.clear()
-        this.listFilms.addAll(films)
+    fun setTvShows(tvShows: List<TvShowEntity>, images: ImagesEntity) {
+        if (tvShows.isNullOrEmpty()) return
+        this.listTvShows.clear()
+        this.listTvShows.addAll(tvShows)
+        this.images = images
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TvShowViewHolder {
@@ -27,29 +30,29 @@ class TvShowAdapter : RecyclerView.Adapter<TvShowAdapter.TvShowViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: TvShowViewHolder, position: Int) {
-        val film = listFilms[position]
-        holder.bind(film)
+        val tvShow = listTvShows[position]
+        holder.bind(tvShow, images)
     }
 
-    override fun getItemCount(): Int = listFilms.size
+    override fun getItemCount(): Int = listTvShows.size
 
     class TvShowViewHolder(private val binding: ItemsTvShowBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(film: FilmEntity) {
+        fun bind(tvShow: TvShowEntity, images: ImagesEntity) {
             with(binding) {
-                tvItemTitle.text = film.title
-                tvItemDate.text = film.releaseDate
-                tvItemOverview.text = film.overview
+                tvItemTitle.text = tvShow.title
+                tvItemDate.text = tvShow.releaseDate
+                tvItemOverview.text = tvShow.overview
 
                 itemView.setOnClickListener {
-                    val intent = Intent(it.context, DetailFilmActivity::class.java)
-                    intent.putExtra(DetailFilmActivity.EXTRA_FILM_ID, film.id)
-                    intent.putExtra(DetailFilmActivity.EXTRA_FILM, R.string.tv_shows)
+                    val intent = Intent(it.context, DetailTvShowActivity::class.java)
+                    intent.putExtra(DetailTvShowActivity.EXTRA_TV_SHOW_ID, tvShow.id)
                     itemView.context.startActivity(intent)
                 }
 
+                val posterPath = images.secureBaseUrl+images.posterSizes[0]+tvShow.posterPath
                 Glide.with(itemView.context)
-                    .load(film.posterPath)
+                    .load(posterPath)
                     .apply(
                         RequestOptions().placeholder(R.drawable.ic_loading)
                             .error(R.drawable.ic_error)
