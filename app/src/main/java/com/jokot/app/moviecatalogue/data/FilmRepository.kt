@@ -6,6 +6,8 @@ import com.jokot.app.moviecatalogue.data.source.local.entity.*
 import com.jokot.app.moviecatalogue.data.source.remote.RemoteDataSource
 import com.jokot.app.moviecatalogue.data.source.remote.RemoteDataSource.*
 import com.jokot.app.moviecatalogue.data.source.remote.response.*
+import com.jokot.app.moviecatalogue.utils.convertDateFormat
+import com.jokot.app.moviecatalogue.utils.convertRunTimeToDuration
 
 class FilmRepository private constructor(private val remoteDataSource: RemoteDataSource) :
     FilmDataSource {
@@ -24,8 +26,8 @@ class FilmRepository private constructor(private val remoteDataSource: RemoteDat
         val imagesResult = MutableLiveData<ImagesEntity>()
 
         remoteDataSource.getConfiguration(object : LoadConfigurationCallback {
-            override fun onImagesConfigurationReceived(imagesConfiguration: ImagesResponse) {
-                imagesConfiguration.let {
+            override fun onImagesConfigurationReceived(imagesConfig: ImagesResponse) {
+                imagesConfig.let {
                     val images = ImagesEntity(
                         it.backdropSizes,
                         it.baseUrl,
@@ -36,17 +38,20 @@ class FilmRepository private constructor(private val remoteDataSource: RemoteDat
                     imagesResult.postValue(images)
                 }
             }
+
         })
+
         return imagesResult
     }
 
     override fun getMovieDetail(movieId: Int): LiveData<MovieDetailEntity> {
         val movieResult = MutableLiveData<MovieDetailEntity>()
+
         remoteDataSource.getMovieDetail(movieId, object : LoadMovieDetailCallback {
             override fun onMovieDetailReceived(movieDetailResponse: MovieDetailResponse) {
-                val genres = ArrayList<GenreEntity>()
+                val genres = ArrayList<String>()
                 for (genre in movieDetailResponse.genres) {
-                    genres.add(GenreEntity(genre.id, genre.name))
+                    genres.add(genre.name)
                 }
                 val movie = MovieDetailEntity(
                     movieDetailResponse.adult,
@@ -61,14 +66,14 @@ class FilmRepository private constructor(private val remoteDataSource: RemoteDat
                     movieDetailResponse.overview,
                     movieDetailResponse.popularity,
                     movieDetailResponse.posterPath,
-                    movieDetailResponse.releaseDate,
+                    convertDateFormat(movieDetailResponse.releaseDate),
                     movieDetailResponse.revenue,
-                    movieDetailResponse.runtime,
+                    convertRunTimeToDuration(movieDetailResponse.runtime),
                     movieDetailResponse.status,
                     movieDetailResponse.tagline,
                     movieDetailResponse.title,
                     movieDetailResponse.video,
-                    movieDetailResponse.voteAverage,
+                    (movieDetailResponse.voteAverage * 10).toInt(),
                     movieDetailResponse.voteCount
                 )
                 movieResult.postValue(movie)
@@ -80,18 +85,19 @@ class FilmRepository private constructor(private val remoteDataSource: RemoteDat
 
     override fun getTvShowDetail(tvShowId: Int): LiveData<TvShowDetailEntity> {
         val tvShowResult = MutableLiveData<TvShowDetailEntity>()
+
         remoteDataSource.getTvShowDetail(tvShowId, object : LoadTvShowDetailCallback {
             override fun onTvShowDetailReceived(tvShowDetailResponse: TvShowDetailResponse) {
-                val genres = ArrayList<GenreEntity>()
+                val genres = ArrayList<String>()
                 for (genre in tvShowDetailResponse.genres) {
-                    genres.add(GenreEntity(genre.id, genre.name))
+                    genres.add(genre.name)
                 }
 
                 val seasons = ArrayList<SeasonEntity>()
                 for (season in tvShowDetailResponse.seasons) {
                     seasons.add(
                         SeasonEntity(
-                            season.airDate,
+                            season.airDate?.let { convertDateFormat(it) },
                             season.episodeCount,
                             season.id,
                             season.name,
@@ -105,14 +111,14 @@ class FilmRepository private constructor(private val remoteDataSource: RemoteDat
                 tvShowDetailResponse.let {
                     val tvShow = TvShowDetailEntity(
                         it.backdropPath,
-                        it.episodeRunTime,
-                        it.firstAirDate,
+                        convertRunTimeToDuration(it.episodeRunTime.average().toInt()),
+                        convertDateFormat(it.firstAirDate),
                         genres,
                         it.homepage,
                         it.id,
                         it.inProduction,
                         it.languages,
-                        it.lastAirDate,
+                        convertDateFormat(it.lastAirDate),
                         it.name,
                         it.numberOfEpisodes,
                         it.numberOfSeasons,
@@ -125,7 +131,7 @@ class FilmRepository private constructor(private val remoteDataSource: RemoteDat
                         it.status,
                         it.tagline,
                         it.type,
-                        it.voteAverage,
+                        (it.voteAverage * 10).toInt(),
                         it.voteCount
                     )
                     tvShowResult.postValue(tvShow)
@@ -146,7 +152,7 @@ class FilmRepository private constructor(private val remoteDataSource: RemoteDat
                         response.id,
                         response.title,
                         response.overview,
-                        response.releaseDate,
+                        convertDateFormat(response.releaseDate),
                         response.voteAverage.toInt(),
                         response.posterPath,
                         response.backdropPath
@@ -170,7 +176,55 @@ class FilmRepository private constructor(private val remoteDataSource: RemoteDat
                         response.id,
                         response.title,
                         response.overview,
-                        response.releaseDate,
+                        convertDateFormat(response.releaseDate),
+                        response.voteAverage.toInt(),
+                        response.posterPath,
+                        response.backdropPath
+                    )
+                    movieList.add(movie)
+                }
+                movieResults.postValue(movieList)
+            }
+        })
+
+        return movieResults
+    }
+
+    override fun getTopRatedMovies(): LiveData<List<MovieEntity>> {
+        val movieResults = MutableLiveData<List<MovieEntity>>()
+        remoteDataSource.getTopRatedMovie(object : LoadMoviesCallback {
+            override fun onAllMovieReceived(movieResponses: List<MovieResponse>) {
+                val movieList = ArrayList<MovieEntity>()
+                for (response in movieResponses) {
+                    val movie = MovieEntity(
+                        response.id,
+                        response.title,
+                        response.overview,
+                        convertDateFormat(response.releaseDate),
+                        response.voteAverage.toInt(),
+                        response.posterPath,
+                        response.backdropPath
+                    )
+                    movieList.add(movie)
+                }
+                movieResults.postValue(movieList)
+            }
+        })
+
+        return movieResults
+    }
+
+    override fun getUpcomingMovies(): LiveData<List<MovieEntity>> {
+        val movieResults = MutableLiveData<List<MovieEntity>>()
+        remoteDataSource.getUpcomingMovie(object : LoadMoviesCallback {
+            override fun onAllMovieReceived(movieResponses: List<MovieResponse>) {
+                val movieList = ArrayList<MovieEntity>()
+                for (response in movieResponses) {
+                    val movie = MovieEntity(
+                        response.id,
+                        response.title,
+                        response.overview,
+                        convertDateFormat(response.releaseDate),
                         response.voteAverage.toInt(),
                         response.posterPath,
                         response.backdropPath
@@ -194,7 +248,7 @@ class FilmRepository private constructor(private val remoteDataSource: RemoteDat
                         response.id,
                         response.name,
                         response.overview,
-                        response.firstAirDate,
+                        convertDateFormat(response.firstAirDate),
                         response.voteAverage.toInt(),
                         response.posterPath,
                         response.backdropPath
@@ -218,7 +272,55 @@ class FilmRepository private constructor(private val remoteDataSource: RemoteDat
                         response.id,
                         response.name,
                         response.overview,
-                        response.firstAirDate,
+                        convertDateFormat(response.firstAirDate),
+                        response.voteAverage.toInt(),
+                        response.posterPath,
+                        response.backdropPath
+                    )
+                    tvShowList.add(tvShow)
+                }
+                tvShowResults.postValue(tvShowList)
+            }
+        })
+
+        return tvShowResults
+    }
+
+    override fun getTopRatedTvShows(): LiveData<List<TvShowEntity>> {
+        val tvShowResults = MutableLiveData<List<TvShowEntity>>()
+        remoteDataSource.getTopRatedTvShow(object : LoadTvShowsCallback {
+            override fun onAllTvShowReceived(tvShowResponses: List<TvShowResponse>) {
+                val tvShowList = ArrayList<TvShowEntity>()
+                for (response in tvShowResponses) {
+                    val tvShow = TvShowEntity(
+                        response.id,
+                        response.name,
+                        response.overview,
+                        convertDateFormat(response.firstAirDate),
+                        response.voteAverage.toInt(),
+                        response.posterPath,
+                        response.backdropPath
+                    )
+                    tvShowList.add(tvShow)
+                }
+                tvShowResults.postValue(tvShowList)
+            }
+        })
+
+        return tvShowResults
+    }
+
+    override fun getAiringTodayTvShows(): LiveData<List<TvShowEntity>> {
+        val tvShowResults = MutableLiveData<List<TvShowEntity>>()
+        remoteDataSource.getAiringTodayTvShow(object : LoadTvShowsCallback {
+            override fun onAllTvShowReceived(tvShowResponses: List<TvShowResponse>) {
+                val tvShowList = ArrayList<TvShowEntity>()
+                for (response in tvShowResponses) {
+                    val tvShow = TvShowEntity(
+                        response.id,
+                        response.name,
+                        response.overview,
+                        convertDateFormat(response.firstAirDate),
                         response.voteAverage.toInt(),
                         response.posterPath,
                         response.backdropPath
