@@ -10,21 +10,21 @@ interface ApiService {
     @GET("configuration")
     fun getConfiguration(
         @Query("api_key") apiKey: String
-    ):Call<ConfigurationResponse>
+    ): Call<ConfigurationResponse>
 
     @GET("movie/{movie_id}")
     fun getMovieDetail(
         @Path("movie_id") movieId: Int,
         @Query("api_key") apiKey: String,
         @Query("language") lang: String? = null
-    ):Call<MovieDetailResponse>
+    ): Call<MovieDetailResponse>
 
     @GET("tv/{tv_id}")
     fun getTvShowDetail(
         @Path("tv_id") tvId: Int,
         @Query("api_key") apiKey: String,
         @Query("language") lang: String? = null
-    ):Call<TvShowDetailResponse>
+    ): Call<TvShowDetailResponse>
 
     @GET("movie/now_playing")
     fun getNowPlayingMovie(
@@ -59,7 +59,7 @@ interface ApiService {
         @Path("movie_id") movieId: Int,
         @Query("api_key") apiKey: String,
         @Query("language") lang: String? = null
-    ):Call<CreditsResponse>
+    ): Call<CreditsResponse>
 
     @GET("tv/on_the_air")
     fun getOnTheAirTvShow(
@@ -94,12 +94,12 @@ interface ApiService {
         @Path("tv_id") tvId: Int,
         @Query("api_key") apiKey: String,
         @Query("language") lang: String? = null
-    ):Call<CreditsResponse>
+    ): Call<CreditsResponse>
 
     @GET("person/{person_id}")
     fun getPersonDetail(
         @Path("person_id") personId: Int,
         @Query("api_key") apiKey: String,
         @Query("language") lang: String? = null
-    ):Call<PersonResponse>
+    ): Call<PersonResponse>
 }

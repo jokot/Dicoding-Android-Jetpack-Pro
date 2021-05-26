@@ -14,7 +14,7 @@ import com.jokot.app.moviecatalogue.ui.detail.movie.DetailMovieActivity
 
 class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
     private val listMovies = ArrayList<MovieEntity>()
-    private lateinit var images : ImagesEntity
+    private lateinit var images: ImagesEntity
 
     fun setMovies(movies: List<MovieEntity>, images: ImagesEntity) {
         if (movies.isNullOrEmpty()) return
@@ -34,7 +34,7 @@ class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
         val movie = listMovies[position]
-        holder.bind(movie,images)
+        holder.bind(movie, images)
     }
 
     override fun getItemCount(): Int = listMovies.size
@@ -51,7 +51,7 @@ class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
                     intent.putExtra(DetailMovieActivity.EXTRA_MOVIE_ID, movie.id)
                     itemView.context.startActivity(intent)
                 }
-                val posterPath = images.secureBaseUrl+images.posterSizes[0]+movie.posterPath
+                val posterPath = images.secureBaseUrl + images.posterSizes[0] + movie.posterPath
                 Glide.with(itemView.context)
                     .load(posterPath)
                     .apply(

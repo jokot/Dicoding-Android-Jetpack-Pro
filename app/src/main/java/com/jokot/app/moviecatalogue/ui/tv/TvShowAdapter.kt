@@ -50,7 +50,7 @@ class TvShowAdapter : RecyclerView.Adapter<TvShowAdapter.TvShowViewHolder>() {
                     itemView.context.startActivity(intent)
                 }
 
-                val posterPath = images.secureBaseUrl+images.posterSizes[0]+tvShow.posterPath
+                val posterPath = images.secureBaseUrl + images.posterSizes[0] + tvShow.posterPath
                 Glide.with(itemView.context)
                     .load(posterPath)
                     .apply(

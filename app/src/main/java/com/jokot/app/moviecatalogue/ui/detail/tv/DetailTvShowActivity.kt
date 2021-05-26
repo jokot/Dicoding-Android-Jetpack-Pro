@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.google.android.material.snackbar.Snackbar
 import com.jokot.app.moviecatalogue.R
 import com.jokot.app.moviecatalogue.data.source.local.entity.ImagesEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.TvShowDetailEntity

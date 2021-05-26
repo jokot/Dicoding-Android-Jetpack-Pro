@@ -9,7 +9,8 @@ import com.jokot.app.moviecatalogue.ui.detail.tv.DetailTvShowViewModel
 import com.jokot.app.moviecatalogue.ui.movie.MovieViewModel
 import com.jokot.app.moviecatalogue.ui.tv.TvShowViewModel
 
-class ViewModelFactory private constructor(private val mFilmRepository: FilmRepository): ViewModelProvider.NewInstanceFactory(){
+class ViewModelFactory private constructor(private val mFilmRepository: FilmRepository) :
+    ViewModelProvider.NewInstanceFactory() {
 
     companion object {
         @Volatile

@@ -1,7 +1,6 @@
 package com.jokot.app.moviecatalogue.utils
 
 import android.annotation.SuppressLint
-import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -16,12 +15,12 @@ fun convertRunTimeToDuration(runTime: Int?): String {
     return if (runTime != null) {
         if (runTime < 60) {
             "${runTime}m"
-        }else {
-            val hour = runTime/60
-            val minute = runTime%60
+        } else {
+            val hour = runTime / 60
+            val minute = runTime % 60
             "${hour}h ${minute}m"
         }
-    }else{
+    } else {
         "0m"
     }
 }
