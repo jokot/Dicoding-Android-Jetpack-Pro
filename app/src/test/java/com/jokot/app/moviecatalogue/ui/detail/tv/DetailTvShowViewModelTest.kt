@@ -49,6 +49,7 @@ class DetailTvShowViewModelTest {
 
         `when`(filmRepository.getConfiguration()).thenReturn(images)
         val imagesEntity = viewModel.getConfiguration().value
+        verify(filmRepository).getConfiguration()
         assertNotNull(imagesEntity)
         assertEquals(dummyConfig.posterSizes.size, imagesEntity?.posterSizes?.size)
 
@@ -64,6 +65,7 @@ class DetailTvShowViewModelTest {
         `when`(filmRepository.getTvShowDetail(tvShowId)).thenReturn(tvShow)
         viewModel.setSelectedTvShow(tvShowId)
         val tvShowEntity = viewModel.getTvShowDetail().value
+        verify(filmRepository).getTvShowDetail(tvShowId)
         assertNotNull(tvShowEntity)
         assertEquals(dummyTvShow.id, tvShowEntity?.id)
         assertEquals(dummyTvShow.name, tvShowEntity?.name)

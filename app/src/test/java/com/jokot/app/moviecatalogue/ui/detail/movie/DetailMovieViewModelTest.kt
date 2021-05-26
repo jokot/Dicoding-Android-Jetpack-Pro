@@ -8,10 +8,9 @@ import com.jokot.app.moviecatalogue.data.source.local.entity.ImagesEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.MovieDetailEntity
 import com.jokot.app.moviecatalogue.utils.DataDummy
 import com.jokot.app.moviecatalogue.utils.Event
-import com.jokot.app.moviecatalogue.utils.LiveDataTestUtil
 import com.nhaarman.mockitokotlin2.verify
-import org.junit.Assert.*
-
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -37,9 +36,6 @@ class DetailMovieViewModelTest {
     private lateinit var observerMovie: Observer<MovieDetailEntity>
 
     @Mock
-    private lateinit var observerMovieError: Observer<Event<String>>
-
-    @Mock
     private lateinit var observerImages: Observer<ImagesEntity>
 
     @Before
@@ -54,6 +50,7 @@ class DetailMovieViewModelTest {
 
         `when`(filmRepository.getConfiguration()).thenReturn(images)
         val imagesEntity = viewModel.getConfiguration().value
+        verify(filmRepository).getConfiguration()
         assertNotNull(imagesEntity)
         assertEquals(dummyConfig.posterSizes.size, imagesEntity?.posterSizes?.size)
 
@@ -69,6 +66,7 @@ class DetailMovieViewModelTest {
         `when`(filmRepository.getMovieDetail(movieId)).thenReturn(movie)
         viewModel.setSelectedMovie(movieId)
         val movieEntity = viewModel.getMovieDetail().value
+        verify(filmRepository).getMovieDetail(movieId)
         assertNotNull(movieEntity)
         assertEquals(dummyMovie.id, movieEntity?.id)
         assertEquals(dummyMovie.title, movieEntity?.title)

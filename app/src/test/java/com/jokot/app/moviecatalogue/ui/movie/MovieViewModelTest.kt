@@ -50,6 +50,7 @@ class MovieViewModelTest {
 
         `when`(filmRepository.getConfiguration()).thenReturn(images)
         val imagesEntity = viewModel.getConfiguration().value
+        verify(filmRepository).getConfiguration()
         assertNotNull(imagesEntity)
         assertEquals(dummyConfig.posterSizes.size, imagesEntity?.posterSizes?.size)
 
@@ -64,6 +65,7 @@ class MovieViewModelTest {
 
         `when`(filmRepository.getNowPlayingMovies()).thenReturn(movies.peekContent())
         val movieEntities = viewModel.getInitData().peekContent().value
+        verify(filmRepository).getNowPlayingMovies()
         assertNotNull(movieEntities)
         assertEquals(dummyMovies.size, movieEntities?.size)
 
@@ -78,6 +80,7 @@ class MovieViewModelTest {
 
         `when`(filmRepository.getNowPlayingMovies()).thenReturn(movies)
         val movieEntities = viewModel.getNowPlayingMovies().value
+        verify(filmRepository).getNowPlayingMovies()
         assertNotNull(movieEntities)
         assertEquals(dummyMovies.size, movieEntities?.size)
 
@@ -92,6 +95,7 @@ class MovieViewModelTest {
 
         `when`(filmRepository.getPopularMovies()).thenReturn(movies)
         val moviesEntities = viewModel.getPopularMovies().value
+        verify(filmRepository).getPopularMovies()
         assertNotNull(moviesEntities)
         assertEquals(dummyMovies.size, moviesEntities?.size)
 
@@ -106,6 +110,7 @@ class MovieViewModelTest {
 
         `when`(filmRepository.getTopRatedMovies()).thenReturn(movies)
         val moviesEntities = viewModel.getTopRatedMovies().value
+        verify(filmRepository).getTopRatedMovies()
         assertNotNull(moviesEntities)
         assertEquals(dummyMovies.size, moviesEntities?.size)
 
@@ -120,6 +125,7 @@ class MovieViewModelTest {
 
         `when`(filmRepository.getUpcomingMovies()).thenReturn(movies)
         val moviesEntities = viewModel.getUpcomingMovies().value
+        verify(filmRepository).getUpcomingMovies()
         assertNotNull(moviesEntities)
         assertEquals(dummyMovies.size, moviesEntities?.size)
 

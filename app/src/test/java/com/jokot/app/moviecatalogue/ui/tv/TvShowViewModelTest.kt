@@ -8,8 +8,6 @@ import com.jokot.app.moviecatalogue.data.source.local.entity.ImagesEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.TvShowEntity
 import com.jokot.app.moviecatalogue.utils.DataDummy
 import com.jokot.app.moviecatalogue.utils.Event
-import com.jokot.app.moviecatalogue.utils.LiveDataTestUtil
-import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.verify
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -17,8 +15,8 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito.`when`
 import org.mockito.Mock
+import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
@@ -51,6 +49,7 @@ class TvShowViewModelTest {
 
         `when`(filmRepository.getConfiguration()).thenReturn(images)
         val imageEntity = viewModel.getConfiguration().value
+        verify(filmRepository).getConfiguration()
         assertNotNull(imageEntity)
         assertEquals(dummyConfig.posterSizes.size, imageEntity?.posterSizes?.size)
 
@@ -65,7 +64,7 @@ class TvShowViewModelTest {
 
         `when`(filmRepository.getOnTheAirTvShows()).thenReturn(tvShows.peekContent())
         val tvShowsEntities = viewModel.getOnTheAirTvShow().value
-
+        verify(filmRepository).getOnTheAirTvShows()
         assertNotNull(tvShowsEntities)
         assertEquals(dummyTvShows.size, tvShowsEntities?.size)
 
@@ -80,7 +79,7 @@ class TvShowViewModelTest {
 
         `when`(filmRepository.getOnTheAirTvShows()).thenReturn(tvShows)
         val tvShowsEntities = viewModel.getOnTheAirTvShow().value
-
+        verify(filmRepository).getOnTheAirTvShows()
         assertNotNull(tvShowsEntities)
         assertEquals(dummyTvShows.size, tvShowsEntities?.size)
 
@@ -95,6 +94,7 @@ class TvShowViewModelTest {
 
         `when`(filmRepository.getPopularTvShows()).thenReturn(tvShows)
         val tvShowsEntities = viewModel.getPopularTvShow().value
+        verify(filmRepository).getPopularTvShows()
         assertNotNull(tvShowsEntities)
         assertEquals(dummyTvShows.size, tvShowsEntities?.size)
 
@@ -109,6 +109,7 @@ class TvShowViewModelTest {
 
         `when`(filmRepository.getTopRatedTvShows()).thenReturn(tvShows)
         val tvShowsEntities = viewModel.getTopRatedTvShow().value
+        verify(filmRepository).getTopRatedTvShows()
         assertNotNull(tvShowsEntities)
         assertEquals(dummyTvShows.size, tvShowsEntities?.size)
 
@@ -123,6 +124,7 @@ class TvShowViewModelTest {
 
         `when`(filmRepository.getAiringTodayTvShows()).thenReturn(tvShows)
         val tvShowsEntities = viewModel.getAiringTodayTvShow().value
+        verify(filmRepository).getAiringTodayTvShows()
         assertNotNull(tvShowsEntities)
         assertEquals(dummyTvShows.size, tvShowsEntities?.size)
 
