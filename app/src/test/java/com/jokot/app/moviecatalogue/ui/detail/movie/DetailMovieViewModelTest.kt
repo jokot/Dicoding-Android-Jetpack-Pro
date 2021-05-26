@@ -1,15 +1,17 @@
-package com.jokot.app.moviecatalogue.ui.detail
+package com.jokot.app.moviecatalogue.ui.detail.movie
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.jokot.app.moviecatalogue.data.FilmRepository
+import com.jokot.app.moviecatalogue.data.source.local.entity.ImagesEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.MovieDetailEntity
-import com.jokot.app.moviecatalogue.data.source.local.entity.MovieEntity
-import com.jokot.app.moviecatalogue.ui.detail.movie.DetailMovieViewModel
 import com.jokot.app.moviecatalogue.utils.DataDummy
+import com.jokot.app.moviecatalogue.utils.Event
+import com.jokot.app.moviecatalogue.utils.LiveDataTestUtil
 import com.nhaarman.mockitokotlin2.verify
 import org.junit.Assert.*
+
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -23,6 +25,7 @@ class DetailMovieViewModelTest {
     private lateinit var viewModel: DetailMovieViewModel
     private val dummyMovie = DataDummy.generateDummyMovieDetail()
     private val movieId = dummyMovie.id
+    private val dummyConfig = DataDummy.generateDummyConfig()
 
     @get:Rule
     var instantTaskExecutor = InstantTaskExecutorRule()
@@ -31,7 +34,13 @@ class DetailMovieViewModelTest {
     private lateinit var filmRepository: FilmRepository
 
     @Mock
-    private lateinit var observer: Observer<MovieDetailEntity>
+    private lateinit var observerMovie: Observer<MovieDetailEntity>
+
+    @Mock
+    private lateinit var observerMovieError: Observer<Event<String>>
+
+    @Mock
+    private lateinit var observerImages: Observer<ImagesEntity>
 
     @Before
     fun setup() {
@@ -39,33 +48,38 @@ class DetailMovieViewModelTest {
     }
 
     @Test
-    fun getMovieDetail() {
-        val movieDetail = MutableLiveData<MovieDetailEntity>()
-        movieDetail.value = dummyMovie
+    fun getConfiguration() {
+        val images = MutableLiveData<ImagesEntity>()
+        images.value = dummyConfig
 
-        `when`(filmRepository.getMovieDetail(movieId)).thenReturn(movieDetail)
-        viewModel.setSelectedMovie(movieId)
-        val movie = viewModel.getMovieDetail().value
-        assertNotNull(movie)
-        assertEquals(dummyMovie.id, movie?.id)
-        assertEquals(dummyMovie.title, movie?.title)
-        assertEquals(dummyMovie.overview, movie?.overview)
-        assertEquals(dummyMovie.releaseDate, movie?.releaseDate)
-        assertEquals(dummyMovie.voteAverage, movie?.voteAverage)
-        assertEquals(dummyMovie.posterPath, movie?.posterPath)
-        assertEquals(dummyMovie.backdropPath, movie?.backdropPath)
+        `when`(filmRepository.getConfiguration()).thenReturn(images)
+        val imagesEntity = viewModel.getConfiguration().value
+        assertNotNull(imagesEntity)
+        assertEquals(dummyConfig.posterSizes.size, imagesEntity?.posterSizes?.size)
 
-        viewModel.getMovieDetail().observeForever(observer)
-        verify(observer).onChanged(dummyMovie)
+        viewModel.getConfiguration().observeForever(observerImages)
+        verify(observerImages).onChanged(dummyConfig)
     }
 
-//    @Test
-//    fun getMovieWithUnknownId() {
-//        val movieId = 11
-//        viewModel.setSelectedMovie(movieId)
-//        val exception = assertThrows(UninitializedPropertyAccessException::class.java) {
-//            viewModel.getMovieDetail()
-//        }
-//        assertEquals("lateinit property movie has not been initialized", exception.message)
-//    }
+    @Test
+    fun getMovieDetail() {
+        val movie = MutableLiveData<MovieDetailEntity>()
+        movie.value = dummyMovie
+
+        `when`(filmRepository.getMovieDetail(movieId)).thenReturn(movie)
+        viewModel.setSelectedMovie(movieId)
+        val movieEntity = viewModel.getMovieDetail().value
+        assertNotNull(movieEntity)
+        assertEquals(dummyMovie.id, movieEntity?.id)
+        assertEquals(dummyMovie.title, movieEntity?.title)
+        assertEquals(dummyMovie.overview, movieEntity?.overview)
+        assertEquals(dummyMovie.releaseDate, movieEntity?.releaseDate)
+        assertEquals(dummyMovie.genres, movieEntity?.genres)
+        assertEquals(dummyMovie.voteAverage, movieEntity?.voteAverage)
+        assertEquals(dummyMovie.posterPath, movieEntity?.posterPath)
+        assertEquals(dummyMovie.backdropPath, movieEntity?.backdropPath)
+
+        viewModel.getMovieDetail().observeForever(observerMovie)
+        verify(observerMovie).onChanged(dummyMovie)
+    }
 }
