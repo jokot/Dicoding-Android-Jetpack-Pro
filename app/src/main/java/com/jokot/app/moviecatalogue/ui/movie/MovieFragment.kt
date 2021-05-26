@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.jokot.app.moviecatalogue.R
 import com.jokot.app.moviecatalogue.databinding.FragmentMovieBinding
+import com.jokot.app.moviecatalogue.viewmodel.ViewModelFactory
 
 class MovieFragment : Fragment() {
 
@@ -25,14 +27,58 @@ class MovieFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (activity != null) {
-            val viewModel = ViewModelProvider(
-                this,
-                ViewModelProvider.NewInstanceFactory()
-            )[MovieViewModel::class.java]
-            val movies = viewModel.getMovies()
+            val factory = ViewModelFactory.getInstance()
+            val viewModel = ViewModelProvider(this, factory)[MovieViewModel::class.java]
 
             val movieAdapter = MovieAdapter()
-            movieAdapter.setFilms(movies)
+
+            fragmentMovieBinding.progressBar.visibility = View.VISIBLE
+            viewModel.getConfiguration().observe(viewLifecycleOwner, { images ->
+                viewModel.getInitData().getContentIfNotHandled()?.let {
+                    it.observe(viewLifecycleOwner, { movies ->
+                        fragmentMovieBinding.progressBar.visibility = View.GONE
+                        movieAdapter.setMovies(movies, images)
+                        movieAdapter.notifyDataSetChanged()
+                    })
+                }
+            })
+
+            fragmentMovieBinding.chipGroup.setOnCheckedChangeListener { _, checkedId ->
+                fragmentMovieBinding.progressBar.visibility = View.VISIBLE
+                viewModel.getConfiguration().observe(viewLifecycleOwner, { images ->
+                    when (checkedId) {
+                        fragmentMovieBinding.chip1.id -> {
+                            viewModel.getNowPlayingMovies().observe(viewLifecycleOwner, { movies ->
+                                fragmentMovieBinding.progressBar.visibility = View.GONE
+                                movieAdapter.setMovies(movies, images)
+                                movieAdapter.notifyDataSetChanged()
+                            })
+                        }
+                        fragmentMovieBinding.chip2.id -> {
+                            viewModel.getPopularMovies().observe(viewLifecycleOwner, { movies ->
+                                fragmentMovieBinding.progressBar.visibility = View.GONE
+                                movieAdapter.setMovies(movies, images)
+                                movieAdapter.notifyDataSetChanged()
+                            })
+                        }
+                        fragmentMovieBinding.chip3.id -> {
+                            viewModel.getTopRatedMovies().observe(viewLifecycleOwner, { movies ->
+                                fragmentMovieBinding.progressBar.visibility = View.GONE
+                                movieAdapter.setMovies(movies, images)
+                                movieAdapter.notifyDataSetChanged()
+                            })
+                        }
+                        fragmentMovieBinding.chip4.id -> {
+                            viewModel.getUpcomingMovies().observe(viewLifecycleOwner, { movies ->
+                                fragmentMovieBinding.progressBar.visibility = View.GONE
+                                movieAdapter.setMovies(movies, images)
+                                movieAdapter.notifyDataSetChanged()
+                            })
+                        }
+
+                    }
+                })
+            }
 
             with(fragmentMovieBinding.rvMovie) {
                 layoutManager = LinearLayoutManager(context)

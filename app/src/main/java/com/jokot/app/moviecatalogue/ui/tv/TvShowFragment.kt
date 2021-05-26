@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.jokot.app.moviecatalogue.R
 import com.jokot.app.moviecatalogue.databinding.FragmentTvShowBinding
+import com.jokot.app.moviecatalogue.viewmodel.ViewModelFactory
 
 class TvShowFragment : Fragment() {
 
@@ -25,14 +27,61 @@ class TvShowFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (activity != null) {
-            val viewModel = ViewModelProvider(
-                this,
-                ViewModelProvider.NewInstanceFactory()
-            )[TvShowViewModel::class.java]
-            val tvShows = viewModel.getTvShows()
+            val factory = ViewModelFactory.getInstance()
+            val viewModel = ViewModelProvider(this, factory)[TvShowViewModel::class.java]
 
             val tvShowAdapter = TvShowAdapter()
-            tvShowAdapter.setFilms(tvShows)
+
+            fragmentTvShowBinding.progressBar.visibility = View.VISIBLE
+            viewModel.getConfiguration().observe(viewLifecycleOwner, { images ->
+                viewModel.getInitData().getContentIfNotHandled()?.let {
+                    it.observe(viewLifecycleOwner, { tvShows ->
+                        fragmentTvShowBinding.progressBar.visibility = View.GONE
+                        tvShowAdapter.setTvShows(tvShows, images)
+                        tvShowAdapter.notifyDataSetChanged()
+                    })
+                }
+            })
+
+            fragmentTvShowBinding.chipGroup.setOnCheckedChangeListener { _, checkedId ->
+                fragmentTvShowBinding.progressBar.visibility = View.VISIBLE
+                viewModel.getConfiguration().observe(viewLifecycleOwner, { images ->
+                    when (checkedId) {
+                        fragmentTvShowBinding.chip1.id -> {
+                            viewModel.getOnTheAirTvShow()
+                                .observe(viewLifecycleOwner, { tvShows ->
+                                    fragmentTvShowBinding.progressBar.visibility = View.GONE
+                                    tvShowAdapter.setTvShows(tvShows, images)
+                                    tvShowAdapter.notifyDataSetChanged()
+                                })
+                        }
+                        fragmentTvShowBinding.chip2.id -> {
+                            viewModel.getPopularTvShow()
+                                .observe(viewLifecycleOwner, { tvShows ->
+                                    fragmentTvShowBinding.progressBar.visibility = View.GONE
+                                    tvShowAdapter.setTvShows(tvShows, images)
+                                    tvShowAdapter.notifyDataSetChanged()
+                                })
+                        }
+                        fragmentTvShowBinding.chip3.id -> {
+                            viewModel.getTopRatedTvShow()
+                                .observe(viewLifecycleOwner, { tvShows ->
+                                    fragmentTvShowBinding.progressBar.visibility = View.GONE
+                                    tvShowAdapter.setTvShows(tvShows, images)
+                                    tvShowAdapter.notifyDataSetChanged()
+                                })
+                        }
+                        fragmentTvShowBinding.chip4.id -> {
+                            viewModel.getAiringTodayTvShow()
+                                .observe(viewLifecycleOwner, { tvShows ->
+                                    fragmentTvShowBinding.progressBar.visibility = View.GONE
+                                    tvShowAdapter.setTvShows(tvShows, images)
+                                    tvShowAdapter.notifyDataSetChanged()
+                                })
+                        }
+                    }
+                })
+            }
 
             with(fragmentTvShowBinding.rvTvShow) {
                 layoutManager = LinearLayoutManager(context)
