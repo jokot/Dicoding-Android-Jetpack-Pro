@@ -18,10 +18,6 @@ import org.junit.Test
 class HomeActivityTest {
     private val dummyMovies = DataDummy.generateDummyMovies()
     private val dummyTvShows = DataDummy.generateDummyTvShows()
-    // memiliki value Detail Movie dengan title "Mortal Kombat"
-    private val dummyMovieDetail = DataDummy.generateDummyMovieDetail()
-    // memiliki value Detail Tv Show dengan name "The Flash"
-    private val dummyTvShowDetail = DataDummy.generateDummyTvShowDetail()
 
     @Before
     fun setUp() {
@@ -57,30 +53,20 @@ class HomeActivityTest {
 
     @Test
     fun loadDetailMovie() {
-        onView(withText(dummyMovieDetail.title)).perform(click())
-
-        onView(withId(R.id.text_title)).check(matches(isDisplayed()))
-        onView(withId(R.id.text_title)).check(matches(withText(dummyMovieDetail.title)))
-        onView(withId(R.id.text_overview)).check(matches(isDisplayed()))
-        onView(withId(R.id.text_overview)).check(matches(withText(dummyMovieDetail.overview)))
-        onView(withId(R.id.text_date)).check(matches(isDisplayed()))
-        onView(withId(R.id.text_date)).check(matches(withText(dummyMovieDetail.releaseDate)))
-        onView(withId(R.id.text_genre)).check(matches(isDisplayed()))
-        onView(withId(R.id.text_genre)).check(matches(withText(dummyMovieDetail.genres.joinToString())))
-        onView(withId(R.id.text_duration)).check(matches(isDisplayed()))
-        onView(withId(R.id.text_duration)).check(matches(withText(dummyMovieDetail.duration)))
-        onView(withId(R.id.text_score)).check(matches(isDisplayed()))
-        onView(withId(R.id.text_score)).check(matches(withText("${dummyMovieDetail.voteAverage}%")))
-        onView(withId(R.id.text_year)).check(matches(isDisplayed()))
-        onView(withId(R.id.text_year)).check(
-            matches(
-                withText(
-                    dummyMovieDetail.releaseDate.takeLast(
-                        4
-                    )
-                )
+        onView(withId(R.id.rv_movie)).perform(
+            RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
+                0,
+                click()
             )
         )
+
+        onView(withId(R.id.text_title)).check(matches(isDisplayed()))
+        onView(withId(R.id.text_overview)).check(matches(isDisplayed()))
+        onView(withId(R.id.text_date)).check(matches(isDisplayed()))
+        onView(withId(R.id.text_genre)).check(matches(isDisplayed()))
+        onView(withId(R.id.text_duration)).check(matches(isDisplayed()))
+        onView(withId(R.id.text_score)).check(matches(isDisplayed()))
+        onView(withId(R.id.text_year)).check(matches(isDisplayed()))
     }
 
     @Test
@@ -109,30 +95,19 @@ class HomeActivityTest {
     @Test
     fun loadDetailTvShow() {
         onView(withText(R.string.tv_shows)).perform(click())
-        onView(withText(dummyTvShowDetail.name)).perform(click())
-
-        onView(withId(R.id.text_title)).check(matches(isDisplayed()))
-        onView(withId(R.id.text_title)).check(matches(withText(dummyTvShowDetail.name)))
-        onView(withId(R.id.text_overview)).check(matches(isDisplayed()))
-        onView(withId(R.id.text_overview)).check(matches(withText(dummyTvShowDetail.overview)))
-        onView(withId(R.id.text_date)).check(matches(isDisplayed()))
-        onView(withId(R.id.text_date)).check(matches(withText(dummyTvShowDetail.firstAirDate)))
-        onView(withId(R.id.text_genre)).check(matches(isDisplayed()))
-        onView(withId(R.id.text_genre)).check(matches(withText(dummyTvShowDetail.genres.joinToString())))
-        onView(withId(R.id.text_duration)).check(matches(isDisplayed()))
-        onView(withId(R.id.text_duration)).check(matches(withText(dummyTvShowDetail.episodeRunTime)))
-        onView(withId(R.id.text_score)).check(matches(isDisplayed()))
-        onView(withId(R.id.text_score)).check(matches(withText("${dummyTvShowDetail.voteAverage}%")))
-        onView(withId(R.id.text_year)).check(matches(isDisplayed()))
-        onView(withId(R.id.text_year)).check(
-            matches(
-                withText(
-                    dummyTvShowDetail.firstAirDate.takeLast(
-                        4
-                    )
-                )
+        onView(withId(R.id.rv_tv_show)).perform(
+            RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
+                0,
+                click()
             )
         )
 
+        onView(withId(R.id.text_title)).check(matches(isDisplayed()))
+        onView(withId(R.id.text_overview)).check(matches(isDisplayed()))
+        onView(withId(R.id.text_date)).check(matches(isDisplayed()))
+        onView(withId(R.id.text_genre)).check(matches(isDisplayed()))
+        onView(withId(R.id.text_duration)).check(matches(isDisplayed()))
+        onView(withId(R.id.text_score)).check(matches(isDisplayed()))
+        onView(withId(R.id.text_year)).check(matches(isDisplayed()))
     }
 }
