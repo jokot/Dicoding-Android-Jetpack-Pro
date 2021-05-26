@@ -7,7 +7,6 @@ import com.jokot.app.moviecatalogue.data.FilmRepository
 import com.jokot.app.moviecatalogue.data.source.local.entity.ImagesEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.MovieDetailEntity
 import com.jokot.app.moviecatalogue.utils.DataDummy
-import com.jokot.app.moviecatalogue.utils.Event
 import com.nhaarman.mockitokotlin2.verify
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
