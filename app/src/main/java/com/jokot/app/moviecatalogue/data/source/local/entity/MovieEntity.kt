@@ -1,15 +1,47 @@
 package com.jokot.app.moviecatalogue.data.source.local.entity
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
+import androidx.annotation.NonNull
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-@Parcelize
+@Entity(tableName = "movie_entities")
 data class MovieEntity(
-    val id: Int,
-    val title: String,
-    val overview: String,
-    val releaseDate: String,
-    val score: Int,
-    val posterPath: String?,
-    val bannerPath: String?
-) : Parcelable
+    @PrimaryKey
+    @NonNull
+    @ColumnInfo(name = "movieId")
+    var id: Int,
+
+    @ColumnInfo(name = "title")
+    var title: String,
+
+    @ColumnInfo(name = "overview")
+    var overview: String,
+
+    @ColumnInfo(name = "releaseDate")
+    var releaseDate: String,
+
+    @ColumnInfo(name = "score")
+    var score: Int,
+
+    @ColumnInfo(name = "posterPath")
+    var posterPath: String?,
+
+    @ColumnInfo(name = "bannerPath")
+    var bannerPath: String?,
+
+    @ColumnInfo(name = "bookmarked")
+    var bookmarked: Boolean = false,
+
+    @ColumnInfo(name = "isNowPlaying")
+    var isNowPlaying: Boolean = false,
+
+    @ColumnInfo(name = "isPopular")
+    var isPopular: Boolean = false,
+
+    @ColumnInfo(name = "isTopRated")
+    var isTopRated: Boolean = false,
+
+    @ColumnInfo(name = "isUpcoming")
+    var isUpcoming: Boolean = false,
+)

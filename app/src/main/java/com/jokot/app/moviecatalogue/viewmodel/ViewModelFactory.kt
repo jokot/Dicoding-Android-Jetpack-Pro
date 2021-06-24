@@ -1,5 +1,6 @@
 package com.jokot.app.moviecatalogue.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.jokot.app.moviecatalogue.data.FilmRepository
@@ -16,9 +17,9 @@ class ViewModelFactory private constructor(private val mFilmRepository: FilmRepo
         @Volatile
         private var instance: ViewModelFactory? = null
 
-        fun getInstance(): ViewModelFactory =
+        fun getInstance(context: Context): ViewModelFactory =
             instance ?: synchronized(this) {
-                instance ?: ViewModelFactory(Injection.provideRepository()).apply {
+                instance ?: ViewModelFactory(Injection.provideRepository(context)).apply {
                     instance = this
                 }
             }

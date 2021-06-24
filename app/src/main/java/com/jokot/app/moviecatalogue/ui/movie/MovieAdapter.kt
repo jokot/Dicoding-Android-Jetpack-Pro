@@ -16,7 +16,7 @@ class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
     private val listMovies = ArrayList<MovieEntity>()
     private lateinit var images: ImagesEntity
 
-    fun setMovies(movies: List<MovieEntity>, images: ImagesEntity) {
+    fun setMovies(movies: List<MovieEntity>?, images: ImagesEntity) {
         if (movies.isNullOrEmpty()) return
         this.listMovies.clear()
         this.listMovies.addAll(movies)

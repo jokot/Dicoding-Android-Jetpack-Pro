@@ -4,88 +4,100 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.jokot.app.moviecatalogue.data.source.local.entity.ImagesEntity
+import com.jokot.app.moviecatalogue.data.source.local.entity.TvShowEntity
 import com.jokot.app.moviecatalogue.databinding.FragmentTvShowBinding
 import com.jokot.app.moviecatalogue.viewmodel.ViewModelFactory
+import com.jokot.app.moviecatalogue.vo.Resource
+import com.jokot.app.moviecatalogue.vo.Status
 
 class TvShowFragment : Fragment() {
 
-    private lateinit var fragmentTvShowBinding: FragmentTvShowBinding
+    private var _fragmentTvShowBinding: FragmentTvShowBinding? = null
+    private val binding get() = _fragmentTvShowBinding
+    private lateinit var tvShowAdapter: TvShowAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): View? {
         // Inflate the layout for this fragment
-        fragmentTvShowBinding = FragmentTvShowBinding.inflate(layoutInflater, container, false)
-        return fragmentTvShowBinding.root
+        _fragmentTvShowBinding = FragmentTvShowBinding.inflate(layoutInflater, container, false)
+        return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (activity != null) {
-            val factory = ViewModelFactory.getInstance()
+            val factory = ViewModelFactory.getInstance(requireActivity())
             val viewModel = ViewModelProvider(this, factory)[TvShowViewModel::class.java]
 
-            val tvShowAdapter = TvShowAdapter()
+            tvShowAdapter = TvShowAdapter()
 
-            fragmentTvShowBinding.progressBar.visibility = View.VISIBLE
+            binding?.progressBar?.visibility = View.VISIBLE
             viewModel.getConfiguration().observe(viewLifecycleOwner, { images ->
                 viewModel.getInitData().getContentIfNotHandled()?.let {
                     it.observe(viewLifecycleOwner, { tvShows ->
-                        fragmentTvShowBinding.progressBar.visibility = View.GONE
-                        tvShowAdapter.setTvShows(tvShows, images)
-                        tvShowAdapter.notifyDataSetChanged()
+                        tvShows?.let { setupUiOnStatus(tvShows, images) }
                     })
                 }
             })
 
-            fragmentTvShowBinding.chipGroup.setOnCheckedChangeListener { _, checkedId ->
-                fragmentTvShowBinding.progressBar.visibility = View.VISIBLE
+            binding?.chipGroup?.setOnCheckedChangeListener { _, checkedId ->
+                binding?.progressBar?.visibility = View.VISIBLE
                 viewModel.getConfiguration().observe(viewLifecycleOwner, { images ->
                     when (checkedId) {
-                        fragmentTvShowBinding.chip1.id -> {
+                        binding?.chip1?.id -> {
                             viewModel.getOnTheAirTvShow()
                                 .observe(viewLifecycleOwner, { tvShows ->
-                                    fragmentTvShowBinding.progressBar.visibility = View.GONE
-                                    tvShowAdapter.setTvShows(tvShows, images)
-                                    tvShowAdapter.notifyDataSetChanged()
+                                    tvShows?.let { setupUiOnStatus(tvShows, images) }
                                 })
                         }
-                        fragmentTvShowBinding.chip2.id -> {
+                        binding?.chip2?.id -> {
                             viewModel.getPopularTvShow()
                                 .observe(viewLifecycleOwner, { tvShows ->
-                                    fragmentTvShowBinding.progressBar.visibility = View.GONE
-                                    tvShowAdapter.setTvShows(tvShows, images)
-                                    tvShowAdapter.notifyDataSetChanged()
+                                    tvShows?.let { setupUiOnStatus(tvShows, images) }
                                 })
                         }
-                        fragmentTvShowBinding.chip3.id -> {
+                        binding?.chip3?.id -> {
                             viewModel.getTopRatedTvShow()
                                 .observe(viewLifecycleOwner, { tvShows ->
-                                    fragmentTvShowBinding.progressBar.visibility = View.GONE
-                                    tvShowAdapter.setTvShows(tvShows, images)
-                                    tvShowAdapter.notifyDataSetChanged()
+                                    tvShows?.let { setupUiOnStatus(tvShows, images) }
                                 })
                         }
-                        fragmentTvShowBinding.chip4.id -> {
+                        binding?.chip4?.id -> {
                             viewModel.getAiringTodayTvShow()
                                 .observe(viewLifecycleOwner, { tvShows ->
-                                    fragmentTvShowBinding.progressBar.visibility = View.GONE
-                                    tvShowAdapter.setTvShows(tvShows, images)
-                                    tvShowAdapter.notifyDataSetChanged()
+                                    tvShows?.let { setupUiOnStatus(tvShows, images) }
                                 })
                         }
                     }
                 })
             }
 
-            with(fragmentTvShowBinding.rvTvShow) {
-                layoutManager = LinearLayoutManager(context)
-                setHasFixedSize(true)
-                adapter = tvShowAdapter
+            with(binding?.rvTvShow) {
+                this?.layoutManager = LinearLayoutManager(context)
+                this?.setHasFixedSize(true)
+                this?.adapter = tvShowAdapter
+            }
+        }
+    }
+
+    private fun setupUiOnStatus(tvShows: Resource<List<TvShowEntity>>, images: ImagesEntity) {
+        when (tvShows.status) {
+            Status.LOADING -> binding?.progressBar?.visibility = View.VISIBLE
+            Status.SUCCESS -> {
+                binding?.progressBar?.visibility = View.GONE
+                tvShowAdapter.setTvShows(tvShows.data, images)
+                tvShowAdapter.notifyDataSetChanged()
+            }
+            Status.ERROR -> {
+                binding?.progressBar?.visibility = View.GONE
+                Toast.makeText(context, "Terjadi kesalahan", Toast.LENGTH_SHORT).show()
             }
         }
     }

@@ -54,13 +54,6 @@ interface ApiService {
         @Query("page") page: Int? = null
     ): Call<MoviesResponse>
 
-    @GET("movie/{movie_id}/credits")
-    fun getMovieCredits(
-        @Path("movie_id") movieId: Int,
-        @Query("api_key") apiKey: String,
-        @Query("language") lang: String? = null
-    ): Call<CreditsResponse>
-
     @GET("tv/on_the_air")
     fun getOnTheAirTvShow(
         @Query("api_key") apiKey: String,
@@ -88,18 +81,4 @@ interface ApiService {
         @Query("language") lang: String? = null,
         @Query("page") page: Int? = null
     ): Call<TvShowsResponse>
-
-    @GET("tv/{tv_id}/credits")
-    fun getTvShowCredits(
-        @Path("tv_id") tvId: Int,
-        @Query("api_key") apiKey: String,
-        @Query("language") lang: String? = null
-    ): Call<CreditsResponse>
-
-    @GET("person/{person_id}")
-    fun getPersonDetail(
-        @Path("person_id") personId: Int,
-        @Query("api_key") apiKey: String,
-        @Query("language") lang: String? = null
-    ): Call<PersonResponse>
 }

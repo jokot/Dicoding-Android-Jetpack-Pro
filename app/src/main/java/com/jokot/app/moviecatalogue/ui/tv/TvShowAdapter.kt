@@ -16,7 +16,7 @@ class TvShowAdapter : RecyclerView.Adapter<TvShowAdapter.TvShowViewHolder>() {
     private val listTvShows = ArrayList<TvShowEntity>()
     private lateinit var images: ImagesEntity
 
-    fun setTvShows(tvShows: List<TvShowEntity>, images: ImagesEntity) {
+    fun setTvShows(tvShows: List<TvShowEntity>?, images: ImagesEntity) {
         if (tvShows.isNullOrEmpty()) return
         this.listTvShows.clear()
         this.listTvShows.addAll(tvShows)

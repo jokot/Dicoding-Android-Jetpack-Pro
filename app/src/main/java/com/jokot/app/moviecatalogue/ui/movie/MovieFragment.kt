@@ -4,74 +4,73 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.jokot.app.moviecatalogue.data.source.local.entity.ImagesEntity
+import com.jokot.app.moviecatalogue.data.source.local.entity.MovieEntity
 import com.jokot.app.moviecatalogue.databinding.FragmentMovieBinding
 import com.jokot.app.moviecatalogue.viewmodel.ViewModelFactory
+import com.jokot.app.moviecatalogue.vo.Resource
+import com.jokot.app.moviecatalogue.vo.Status
 
 class MovieFragment : Fragment() {
 
-    private lateinit var fragmentMovieBinding: FragmentMovieBinding
+    private var _fragmentMovieBinding: FragmentMovieBinding? = null
+    private val binding get() = _fragmentMovieBinding
+
+    private lateinit var movieAdapter: MovieAdapter
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): View? {
         // Inflate the layout for this fragment
-        fragmentMovieBinding = FragmentMovieBinding.inflate(layoutInflater, container, false)
-        return fragmentMovieBinding.root
+        _fragmentMovieBinding = FragmentMovieBinding.inflate(layoutInflater, container, false)
+        return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (activity != null) {
-            val factory = ViewModelFactory.getInstance()
+            val factory = ViewModelFactory.getInstance(requireActivity())
             val viewModel = ViewModelProvider(this, factory)[MovieViewModel::class.java]
 
-            val movieAdapter = MovieAdapter()
+            movieAdapter = MovieAdapter()
 
-            fragmentMovieBinding.progressBar.visibility = View.VISIBLE
+            binding?.progressBar?.visibility = View.VISIBLE
             viewModel.getConfiguration().observe(viewLifecycleOwner, { images ->
                 viewModel.getInitData().getContentIfNotHandled()?.let {
                     it.observe(viewLifecycleOwner, { movies ->
-                        fragmentMovieBinding.progressBar.visibility = View.GONE
-                        movieAdapter.setMovies(movies, images)
-                        movieAdapter.notifyDataSetChanged()
+                        movies?.let { setupUiOnStatus(movies, images) }
                     })
                 }
             })
 
-            fragmentMovieBinding.chipGroup.setOnCheckedChangeListener { _, checkedId ->
-                fragmentMovieBinding.progressBar.visibility = View.VISIBLE
+            binding?.chipGroup?.setOnCheckedChangeListener { _, checkedId ->
+                binding?.progressBar?.visibility = View.VISIBLE
                 viewModel.getConfiguration().observe(viewLifecycleOwner, { images ->
                     when (checkedId) {
-                        fragmentMovieBinding.chip1.id -> {
+                        binding?.chip1?.id -> {
                             viewModel.getNowPlayingMovies().observe(viewLifecycleOwner, { movies ->
-                                fragmentMovieBinding.progressBar.visibility = View.GONE
-                                movieAdapter.setMovies(movies, images)
-                                movieAdapter.notifyDataSetChanged()
+                                movies?.let { setupUiOnStatus(movies, images) }
                             })
                         }
-                        fragmentMovieBinding.chip2.id -> {
+                        binding?.chip2?.id -> {
                             viewModel.getPopularMovies().observe(viewLifecycleOwner, { movies ->
-                                fragmentMovieBinding.progressBar.visibility = View.GONE
-                                movieAdapter.setMovies(movies, images)
-                                movieAdapter.notifyDataSetChanged()
+                                movies?.let { setupUiOnStatus(movies, images) }
                             })
                         }
-                        fragmentMovieBinding.chip3.id -> {
+                        binding?.chip3?.id -> {
                             viewModel.getTopRatedMovies().observe(viewLifecycleOwner, { movies ->
-                                fragmentMovieBinding.progressBar.visibility = View.GONE
-                                movieAdapter.setMovies(movies, images)
-                                movieAdapter.notifyDataSetChanged()
+                                movies?.let { setupUiOnStatus(movies, images) }
                             })
                         }
-                        fragmentMovieBinding.chip4.id -> {
+                        binding?.chip4?.id -> {
                             viewModel.getUpcomingMovies().observe(viewLifecycleOwner, { movies ->
-                                fragmentMovieBinding.progressBar.visibility = View.GONE
-                                movieAdapter.setMovies(movies, images)
-                                movieAdapter.notifyDataSetChanged()
+                                movies?.let { setupUiOnStatus(movies, images) }
                             })
                         }
 
@@ -79,10 +78,25 @@ class MovieFragment : Fragment() {
                 })
             }
 
-            with(fragmentMovieBinding.rvMovie) {
-                layoutManager = LinearLayoutManager(context)
-                setHasFixedSize(true)
-                adapter = movieAdapter
+            with(binding?.rvMovie) {
+                this?.layoutManager = LinearLayoutManager(context)
+                this?.setHasFixedSize(true)
+                this?.adapter = movieAdapter
+            }
+        }
+    }
+
+    private fun setupUiOnStatus(movies: Resource<List<MovieEntity>>, images: ImagesEntity) {
+        when (movies.status) {
+            Status.LOADING -> binding?.progressBar?.visibility = View.VISIBLE
+            Status.SUCCESS -> {
+                binding?.progressBar?.visibility = View.GONE
+                movieAdapter.setMovies(movies.data, images)
+                movieAdapter.notifyDataSetChanged()
+            }
+            Status.ERROR -> {
+                binding?.progressBar?.visibility = View.GONE
+                Toast.makeText(context, "Terjadi kesalahan", Toast.LENGTH_SHORT).show()
             }
         }
     }

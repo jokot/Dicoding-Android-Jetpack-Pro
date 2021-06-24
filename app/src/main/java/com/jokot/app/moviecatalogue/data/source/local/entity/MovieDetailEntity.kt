@@ -1,29 +1,77 @@
 package com.jokot.app.moviecatalogue.data.source.local.entity
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
+import androidx.annotation.NonNull
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-@Parcelize
+@Entity(tableName = "movie_detail_entities")
 data class MovieDetailEntity(
-    val adult: Boolean,
-    val backdropPath: String?,
-    val budget: Int,
-    val genres: List<String>,
-    val homepage: String?,
-    val id: Int,
-    val imdbId: String?,
-    val originalLanguage: String,
-    val originalTitle: String,
-    val overview: String?,
-    val popularity: Double,
-    val posterPath: String?,
-    val releaseDate: String,
-    val revenue: Int,
-    val duration: String,
-    val status: String,
-    val tagline: String?,
-    val title: String,
-    val video: Boolean,
-    val voteAverage: Int,
-    val voteCount: Int
-) : Parcelable
+    @ColumnInfo(name = "adult")
+    var adult: Boolean,
+
+    @ColumnInfo(name = "backdropPath")
+    var backdropPath: String?,
+
+    @ColumnInfo(name = "budget")
+    var budget: Int,
+
+    @ColumnInfo(name = "genres")
+    var genres: String,
+
+    @ColumnInfo(name = "homepage")
+    var homepage: String?,
+
+    @PrimaryKey
+    @NonNull
+    @ColumnInfo(name = "movieDetailId")
+    var id: Int,
+
+    @ColumnInfo(name = "imdbId")
+    var imdbId: String?,
+
+    @ColumnInfo(name = "originalLanguage")
+    var originalLanguage: String,
+
+    @ColumnInfo(name = "originalTitle")
+    var originalTitle: String,
+
+    @ColumnInfo(name = "overview")
+    var overview: String?,
+
+    @ColumnInfo(name = "popularity")
+    var popularity: Double,
+
+    @ColumnInfo(name = "posterPath")
+    var posterPath: String?,
+
+    @ColumnInfo(name = "releaseDate")
+    var releaseDate: String,
+
+    @ColumnInfo(name = "revenue")
+    var revenue: Int,
+
+    @ColumnInfo(name = "duration")
+    var duration: String,
+
+    @ColumnInfo(name = "status")
+    var status: String,
+
+    @ColumnInfo(name = "tagline")
+    var tagline: String?,
+
+    @ColumnInfo(name = "title")
+    var title: String,
+
+    @ColumnInfo(name = "video")
+    var video: Boolean,
+
+    @ColumnInfo(name = "voteAverage")
+    var voteAverage: Int,
+
+    @ColumnInfo(name = "voteCount")
+    var voteCount: Int,
+
+    @ColumnInfo(name = "bookmarked")
+    var bookmarked: Boolean = false
+)

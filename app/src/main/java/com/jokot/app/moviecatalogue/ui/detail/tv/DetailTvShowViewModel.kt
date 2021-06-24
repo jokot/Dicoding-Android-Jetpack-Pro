@@ -1,20 +1,50 @@
 package com.jokot.app.moviecatalogue.ui.detail.tv
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.jokot.app.moviecatalogue.data.FilmRepository
 import com.jokot.app.moviecatalogue.data.source.local.entity.ImagesEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.TvShowDetailEntity
-import kotlin.properties.Delegates
+import com.jokot.app.moviecatalogue.data.source.local.entity.TvShowEntity
+import com.jokot.app.moviecatalogue.vo.Resource
 
 class DetailTvShowViewModel(private val filmRepository: FilmRepository) : ViewModel() {
-    private var tvShowId by Delegates.notNull<Int>()
+    val tvShowId = MutableLiveData<Int>()
 
     fun setSelectedTvShow(tvShowId: Int) {
-        this.tvShowId = tvShowId
+        this.tvShowId.value = tvShowId
     }
 
     fun getConfiguration(): LiveData<ImagesEntity> = filmRepository.getConfiguration()
 
-    fun getTvShowDetail(): LiveData<TvShowDetailEntity> = filmRepository.getTvShowDetail(tvShowId)
+    var tvShowDetail: LiveData<Resource<TvShowDetailEntity>> =
+        Transformations.switchMap(tvShowId) { mTvShowId ->
+            filmRepository.getTvShowDetail(mTvShowId)
+        }
+
+    fun setBookmark() {
+        val tvShowDetailResource = tvShowDetail.value
+
+        if (tvShowDetailResource != null) {
+            val tvShowDetailEntity = tvShowDetailResource.data
+
+            tvShowDetailEntity?.let {
+                val tvShowEntity = TvShowEntity(
+                    it.id,
+                    it.name,
+                    it.overview,
+                    it.firstAirDate,
+                    it.voteAverage,
+                    it.posterPath,
+                    it.backdropPath,
+                    it.bookmarked
+                )
+                val newState = !it.bookmarked
+                filmRepository.setTvShowBookmark(tvShowEntity, newState)
+                filmRepository.setTvShowDetailBookmark(it, newState)
+            }
+        }
+    }
 }
