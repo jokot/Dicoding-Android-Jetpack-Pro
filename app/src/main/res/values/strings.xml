@@ -4,6 +4,7 @@
     <string name="title_detail_tv_show_activity">Detail Tv Show</string>
     <string name="movies">Movies</string>
     <string name="tv_shows">Tv Shows</string>
+    <string name="favorites">Favorite</string>
     <string name="release_date">Release</string>
     <string name="overview">Overview</string>
     <string name="title">Title</string>
@@ -19,4 +20,6 @@
     <string name="upcoming">Upcoming</string>
     <string name="on_air">On Air</string>
     <string name="airing_today">Airing Today</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

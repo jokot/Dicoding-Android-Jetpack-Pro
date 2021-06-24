@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.jokot.app.moviecatalogue.R
+import com.jokot.app.moviecatalogue.ui.bookmark.BookmarkFragment
 import com.jokot.app.moviecatalogue.ui.movie.MovieFragment
 import com.jokot.app.moviecatalogue.ui.tv.TvShowFragment
 
@@ -14,7 +15,7 @@ class SectionPagerAdapter(private val mContext: Context, fm: FragmentManager) :
 
     companion object {
         @StringRes
-        private val TAB_TITLES = intArrayOf(R.string.movies, R.string.tv_shows)
+        private val TAB_TITLES = intArrayOf(R.string.movies, R.string.tv_shows, R.string.favorites)
     }
 
     override fun getCount(): Int = TAB_TITLES.size
@@ -23,6 +24,7 @@ class SectionPagerAdapter(private val mContext: Context, fm: FragmentManager) :
         when (position) {
             0 -> MovieFragment()
             1 -> TvShowFragment()
+            2 -> BookmarkFragment()
             else -> Fragment()
         }
 
