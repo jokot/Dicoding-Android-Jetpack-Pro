@@ -3,10 +3,13 @@ package com.jokot.app.moviecatalogue.data
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.jokot.app.moviecatalogue.data.source.local.LocalDataSource
-import com.jokot.app.moviecatalogue.data.source.local.entity.*
+import com.jokot.app.moviecatalogue.data.source.local.entity.ImagesEntity
+import com.jokot.app.moviecatalogue.data.source.local.entity.MovieEntity
+import com.jokot.app.moviecatalogue.data.source.local.entity.TvShowDetailEntity
+import com.jokot.app.moviecatalogue.data.source.local.entity.TvShowEntity
 import com.jokot.app.moviecatalogue.data.source.remote.ApiResponse
 import com.jokot.app.moviecatalogue.data.source.remote.RemoteDataSource
-import com.jokot.app.moviecatalogue.data.source.remote.RemoteDataSource.*
+import com.jokot.app.moviecatalogue.data.source.remote.RemoteDataSource.LoadConfigurationCallback
 import com.jokot.app.moviecatalogue.data.source.remote.response.*
 import com.jokot.app.moviecatalogue.utils.AppExecutors
 import com.jokot.app.moviecatalogue.utils.convertDateFormat
@@ -56,12 +59,12 @@ class FilmRepository private constructor(
         return imagesResult
     }
 
-    override fun getMovieDetail(movieId: Int): LiveData<Resource<MovieDetailEntity>> {
-        return object : NetworkBoundResource<MovieDetailEntity, MovieDetailResponse>(appExecutors) {
-            override fun loadFromDB(): LiveData<MovieDetailEntity> =
-                localDataSource.getMovieDetail(movieId)
+    override fun getMovieDetail(movieId: Int): LiveData<Resource<MovieEntity>> {
+        return object : NetworkBoundResource<MovieEntity, MovieDetailResponse>(appExecutors) {
+            override fun loadFromDB(): LiveData<MovieEntity> =
+                localDataSource.getMovieWithDetail(movieId)
 
-            override fun shouldFetch(data: MovieDetailEntity?): Boolean =
+            override fun shouldFetch(data: MovieEntity?): Boolean =
                 data == null
 
 
@@ -74,31 +77,12 @@ class FilmRepository private constructor(
                 for (genre in movieDetailResponse.genres) {
                     genres.add(genre.name)
                 }
-                val movie = MovieDetailEntity(
-                    movieDetailResponse.adult,
-                    movieDetailResponse.backdropPath,
-                    movieDetailResponse.budget,
-                    genres.joinToString(),
-                    movieDetailResponse.homepage,
-                    movieDetailResponse.id,
-                    movieDetailResponse.imdbId,
-                    movieDetailResponse.originalLanguage,
-                    movieDetailResponse.originalTitle,
-                    movieDetailResponse.overview,
-                    movieDetailResponse.popularity,
-                    movieDetailResponse.posterPath,
-                    convertDateFormat(movieDetailResponse.releaseDate),
-                    movieDetailResponse.revenue,
-                    convertRunTimeToDuration(movieDetailResponse.runtime),
-                    movieDetailResponse.status,
-                    movieDetailResponse.tagline,
-                    movieDetailResponse.title,
-                    movieDetailResponse.video,
-                    (movieDetailResponse.voteAverage * 10).toInt(),
-                    movieDetailResponse.voteCount
-                )
-                localDataSource.insertMovieDetail(movie)
 
+                localDataSource.updateMovieDetail(
+                    convertRunTimeToDuration(movieDetailResponse.runtime),
+                    genres.joinToString(),
+                    movieId
+                )
             }
 
         }.asLiveData()
@@ -153,7 +137,7 @@ class FilmRepository private constructor(
     }
 
     override fun getNowPlayingMovies(): LiveData<Resource<List<MovieEntity>>> {
-        return object: NetworkBoundResource<List<MovieEntity>, List<MovieResponse>>(appExecutors) {
+        return object : NetworkBoundResource<List<MovieEntity>, List<MovieResponse>>(appExecutors) {
             override fun loadFromDB(): LiveData<List<MovieEntity>> =
                 localDataSource.getNowPlayingMovies()
 
@@ -284,7 +268,8 @@ class FilmRepository private constructor(
     }
 
     override fun getOnTheAirTvShows(): LiveData<Resource<List<TvShowEntity>>> {
-        return object : NetworkBoundResource<List<TvShowEntity>, List<TvShowResponse>>(appExecutors) {
+        return object :
+            NetworkBoundResource<List<TvShowEntity>, List<TvShowResponse>>(appExecutors) {
             override fun loadFromDB(): LiveData<List<TvShowEntity>> =
                 localDataSource.getOnTheAirTvShows()
 
@@ -316,7 +301,8 @@ class FilmRepository private constructor(
     }
 
     override fun getPopularTvShows(): LiveData<Resource<List<TvShowEntity>>> {
-        return object : NetworkBoundResource<List<TvShowEntity>, List<TvShowResponse>>(appExecutors) {
+        return object :
+            NetworkBoundResource<List<TvShowEntity>, List<TvShowResponse>>(appExecutors) {
             override fun loadFromDB(): LiveData<List<TvShowEntity>> =
                 localDataSource.getPopularTvShows()
 
@@ -348,7 +334,8 @@ class FilmRepository private constructor(
     }
 
     override fun getTopRatedTvShows(): LiveData<Resource<List<TvShowEntity>>> {
-        return object : NetworkBoundResource<List<TvShowEntity>, List<TvShowResponse>>(appExecutors) {
+        return object :
+            NetworkBoundResource<List<TvShowEntity>, List<TvShowResponse>>(appExecutors) {
             override fun loadFromDB(): LiveData<List<TvShowEntity>> =
                 localDataSource.getTopRatedTvShows()
 
@@ -380,7 +367,8 @@ class FilmRepository private constructor(
     }
 
     override fun getAiringTodayTvShows(): LiveData<Resource<List<TvShowEntity>>> {
-        return object : NetworkBoundResource<List<TvShowEntity>, List<TvShowResponse>>(appExecutors) {
+        return object :
+            NetworkBoundResource<List<TvShowEntity>, List<TvShowResponse>>(appExecutors) {
             override fun loadFromDB(): LiveData<List<TvShowEntity>> =
                 localDataSource.getAiringTodayTvShows()
 
@@ -418,16 +406,12 @@ class FilmRepository private constructor(
         localDataSource.getBookmarkedTvShow()
 
     override fun setMovieBookmark(movie: MovieEntity, state: Boolean) =
-        appExecutors.diskIO().execute { localDataSource.setMovieBookmark(movie,state) }
+        appExecutors.diskIO().execute { localDataSource.setMovieBookmark(movie, state) }
 
     override fun setTvShowBookmark(tvShow: TvShowEntity, state: Boolean) =
         appExecutors.diskIO().execute { localDataSource.setTvShowBookmark(tvShow, state) }
 
-    override fun setMovieDetailBookmark(movie: MovieDetailEntity, state: Boolean) {
-        appExecutors.diskIO().execute { localDataSource.setMovieDetailBookmark(movie,state) }
-    }
-
     override fun setTvShowDetailBookmark(tvShow: TvShowDetailEntity, state: Boolean) {
-        appExecutors.diskIO().execute { localDataSource.setTvShowDetailBookmark(tvShow,state) }
+        appExecutors.diskIO().execute { localDataSource.setTvShowDetailBookmark(tvShow, state) }
     }
 }

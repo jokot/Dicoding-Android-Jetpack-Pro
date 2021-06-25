@@ -11,8 +11,8 @@ import com.jokot.app.moviecatalogue.data.source.local.entity.TvShowEntity
 @Dao
 interface FilmDao {
 
-    @Query("SELECT * FROM movie_detail_entities WHERE movieDetailId = :movieId")
-    fun getMovieDetail(movieId: Int): LiveData<MovieDetailEntity>
+    @Query("SELECT * FROM movie_entities WHERE movieId = :movieId")
+    fun getMovieById(movieId: Int): LiveData<MovieEntity>
 
     @Query("SELECT * FROM tv_show_detail_entities WHERE tvShowDetailId = :tvShowId")
     fun getTvShowDetail(tvShowId: Int): LiveData<TvShowDetailEntity>
@@ -54,20 +54,17 @@ interface FilmDao {
     fun insertTvShows(tvSows: List<TvShowEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertMovieDetail(movie: MovieDetailEntity)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertTvShowDetail(tvShow: TvShowDetailEntity)
 
 
     @Update
     fun updateMovie(movie: MovieEntity)
 
-    @Update
-    fun updateTvShow(tvShow: TvShowEntity)
+    @Query("UPDATE movie_entities SET duration = :duration, genres = :genres WHERE movieId = :movieId")
+    fun updateMovieByDetail(duration: String, genres: String, movieId: Int)
 
     @Update
-    fun updateMovieDetail(movie: MovieDetailEntity)
+    fun updateTvShow(tvShow: TvShowEntity)
 
     @Update
     fun updateTvShowDetail(tvShow: TvShowDetailEntity)

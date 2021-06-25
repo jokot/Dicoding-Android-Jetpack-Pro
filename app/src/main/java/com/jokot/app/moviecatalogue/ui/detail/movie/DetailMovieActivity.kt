@@ -13,6 +13,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.jokot.app.moviecatalogue.R
 import com.jokot.app.moviecatalogue.data.source.local.entity.ImagesEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.MovieDetailEntity
+import com.jokot.app.moviecatalogue.data.source.local.entity.MovieEntity
 import com.jokot.app.moviecatalogue.databinding.ActivityDetailMovieBinding
 import com.jokot.app.moviecatalogue.databinding.ContentDetailMovieBinding
 import com.jokot.app.moviecatalogue.viewmodel.ViewModelFactory
@@ -82,14 +83,14 @@ class DetailMovieActivity : AppCompatActivity() {
         }
     }
 
-    private fun populateMovie(movie: MovieDetailEntity, images: ImagesEntity) {
+    private fun populateMovie(movie: MovieEntity, images: ImagesEntity) {
         with(contentDetailMovieBinding) {
             textTitle.text = movie.title
             textDate.text = movie.releaseDate
-            textDuration.text = movie.duration
+            textDuration.text = movie.movieDetailEntity?.duration
             textYear.text = movie.releaseDate.takeLast(4)
-            textGenre.text = movie.genres
-            textScore.text = StringBuilder("${movie.voteAverage}%")
+            textGenre.text = movie.movieDetailEntity?.genres
+            textScore.text = StringBuilder("${movie.score}%")
             textOverview.text = movie.overview
 
             val posterPath = images.secureBaseUrl + images.posterSizes[1] + movie.posterPath
@@ -101,7 +102,7 @@ class DetailMovieActivity : AppCompatActivity() {
                 )
                 .into(imgPoster)
 
-            val backdropPath = images.secureBaseUrl + images.backdropSizes[1] + movie.backdropPath
+            val backdropPath = images.secureBaseUrl + images.backdropSizes[1] + movie.bannerPath
             Glide.with(this@DetailMovieActivity)
                 .load(backdropPath)
                 .apply(

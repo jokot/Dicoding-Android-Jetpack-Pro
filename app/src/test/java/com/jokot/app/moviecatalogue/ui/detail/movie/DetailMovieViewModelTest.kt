@@ -22,7 +22,7 @@ import org.mockito.junit.MockitoJUnitRunner
 class DetailMovieViewModelTest {
     private lateinit var viewModel: DetailMovieViewModel
     private val dummyMovie = DataDummy.generateDummyMovieDetail()
-    private val movieId = dummyMovie.id
+    private val movieId = dummyMovie.movieDetailId
     private val dummyConfig = DataDummy.generateDummyConfig()
 
     @get:Rule
@@ -67,7 +67,7 @@ class DetailMovieViewModelTest {
         val movieEntity = viewModel.getMovieDetail().value
         verify(filmRepository).getMovieDetail(movieId)
         assertNotNull(movieEntity)
-        assertEquals(dummyMovie.id, movieEntity?.id)
+        assertEquals(dummyMovie.movieDetailId, movieEntity?.id)
         assertEquals(dummyMovie.title, movieEntity?.title)
         assertEquals(dummyMovie.overview, movieEntity?.overview)
         assertEquals(dummyMovie.releaseDate, movieEntity?.releaseDate)

@@ -2,6 +2,7 @@ package com.jokot.app.moviecatalogue.data.source.local.entity
 
 import androidx.annotation.NonNull
 import androidx.room.ColumnInfo
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -10,7 +11,7 @@ data class MovieEntity(
     @PrimaryKey
     @NonNull
     @ColumnInfo(name = "movieId")
-    var id: Int,
+    var movieId: Int,
 
     @ColumnInfo(name = "title")
     var title: String,
@@ -44,4 +45,7 @@ data class MovieEntity(
 
     @ColumnInfo(name = "isUpcoming")
     var isUpcoming: Boolean = false,
-)
+) {
+    @Embedded
+    var movieDetailEntity: MovieDetailEntity? = null
+}

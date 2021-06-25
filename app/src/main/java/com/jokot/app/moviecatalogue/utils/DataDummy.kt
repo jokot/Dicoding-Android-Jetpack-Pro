@@ -17,31 +17,32 @@ object DataDummy {
 
     fun generateDummyMovieDetail(): MovieDetailEntity {
         return MovieDetailEntity(
-            false,
-            "/6ELCZlTA5lGUops70hKdB83WJxH.jpg",
-            20000000,
+//            false,
+//            "/6ELCZlTA5lGUops70hKdB83WJxH.jpg",
+//            20000000,
+            "1h 50m",
             listOf(
                 "Action",
                 "Fantasy",
                 "Adventure",
             ).joinToString(),
-            "https://www.mortalkombatmovie.net",
-            460465,
-            "tt0293429",
-            "en",
-            "Mortal Kombat",
-            "Washed-up MMA fighter Cole Young, unaware of his heritage, and hunted by Emperor Shang Tsung's best warrior, Sub-Zero, seeks out and trains with Earth's greatest champions as he prepares to stand against the enemies of Outworld in a high stakes battle for the universe.",
-            2437.17,
-            "/nkayOAUBUu4mMvyNf9iHSUiPjF1.jpg",
-            convertDateFormat("2021-04-07"),
-            76706000,
-            "1h 50m",
-            "Released",
-            "Get over here.",
-            "Mortal Kombat",
-            false,
-            76,
-            2603
+//            "https://www.mortalkombatmovie.net",
+//            460465,
+//            "tt0293429",
+//            "en",
+//            "Mortal Kombat",
+//            "Washed-up MMA fighter Cole Young, unaware of his heritage, and hunted by Emperor Shang Tsung's best warrior, Sub-Zero, seeks out and trains with Earth's greatest champions as he prepares to stand against the enemies of Outworld in a high stakes battle for the universe.",
+//            2437.17,
+//            "/nkayOAUBUu4mMvyNf9iHSUiPjF1.jpg",
+//            convertDateFormat("2021-04-07"),
+//            76706000,
+
+//            "Released",
+//            "Get over here.",
+//            "Mortal Kombat",
+//            false,
+//            76,
+//            2603
         )
     }
 

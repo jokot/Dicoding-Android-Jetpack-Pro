@@ -48,7 +48,7 @@ class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
                 tvItemOverview.text = movie.overview
                 itemView.setOnClickListener {
                     val intent = Intent(it.context, DetailMovieActivity::class.java)
-                    intent.putExtra(DetailMovieActivity.EXTRA_MOVIE_ID, movie.id)
+                    intent.putExtra(DetailMovieActivity.EXTRA_MOVIE_ID, movie.movieId)
                     itemView.context.startActivity(intent)
                 }
                 val posterPath = images.secureBaseUrl + images.posterSizes[0] + movie.posterPath

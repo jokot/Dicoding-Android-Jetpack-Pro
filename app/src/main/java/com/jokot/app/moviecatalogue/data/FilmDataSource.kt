@@ -8,7 +8,7 @@ interface FilmDataSource {
 
     fun getConfiguration(): LiveData<ImagesEntity>
 
-    fun getMovieDetail(movieId: Int): LiveData<Resource<MovieDetailEntity>>
+    fun getMovieDetail(movieId: Int): LiveData<Resource<MovieEntity>>
 
     fun getTvShowDetail(tvShowId: Int): LiveData<Resource<TvShowDetailEntity>>
 
@@ -35,8 +35,6 @@ interface FilmDataSource {
     fun setMovieBookmark(movie: MovieEntity, state: Boolean)
 
     fun setTvShowBookmark(tvShow: TvShowEntity, state: Boolean)
-
-    fun setMovieDetailBookmark(movie: MovieDetailEntity, state: Boolean)
 
     fun setTvShowDetailBookmark(tvShow: TvShowDetailEntity, state: Boolean)
 }

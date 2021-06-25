@@ -1,7 +1,6 @@
 package com.jokot.app.moviecatalogue.data.source.local
 
 import androidx.lifecycle.LiveData
-import androidx.room.Query
 import com.jokot.app.moviecatalogue.data.source.local.entity.MovieDetailEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.MovieEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.TvShowDetailEntity
@@ -16,7 +15,7 @@ class LocalDataSource private constructor(private val mFilmDao: FilmDao) {
             INSTANCE ?: LocalDataSource(filmDao)
     }
 
-    fun getMovieDetail(movieId: Int): LiveData<MovieDetailEntity> = mFilmDao.getMovieDetail(movieId)
+    fun getMovieWithDetail(movieId: Int): LiveData<MovieEntity> = mFilmDao.getMovieById(movieId)
 
     fun getTvShowDetail(tvShowId: Int): LiveData<TvShowDetailEntity> = mFilmDao.getTvShowDetail(tvShowId)
 
@@ -40,13 +39,15 @@ class LocalDataSource private constructor(private val mFilmDao: FilmDao) {
 
     fun insertTvShow(tvShows: List<TvShowEntity>) = mFilmDao.insertTvShows(tvShows)
 
-    fun insertMovieDetail(movie: MovieDetailEntity) = mFilmDao.insertMovieDetail(movie)
-
     fun insertTvShowDetail(tvShow: TvShowDetailEntity) = mFilmDao.insertTvShowDetail(tvShow)
 
     fun getBookmarkedMovie(): LiveData<List<MovieEntity>> = mFilmDao.getBookmarkedMovie()
 
     fun getBookmarkedTvShow(): LiveData<List<TvShowEntity>> = mFilmDao.getBookmarkedTvShow()
+
+    fun updateMovieDetail(duration: String, genres: String, movieId: Int){
+        mFilmDao.updateMovieByDetail(duration, genres,  movieId)
+    }
 
     fun setMovieBookmark(movie: MovieEntity, newState: Boolean) {
         movie.bookmarked = newState
@@ -56,11 +57,6 @@ class LocalDataSource private constructor(private val mFilmDao: FilmDao) {
     fun setTvShowBookmark(tvShow: TvShowEntity, newState: Boolean) {
         tvShow.bookmarked = newState
         mFilmDao.updateTvShow(tvShow)
-    }
-
-    fun setMovieDetailBookmark(movie: MovieDetailEntity, newState: Boolean) {
-        movie.bookmarked = newState
-        mFilmDao.updateMovieDetail(movie)
     }
 
     fun setTvShowDetailBookmark(tvShow: TvShowDetailEntity, newState: Boolean) {

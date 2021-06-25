@@ -20,7 +20,7 @@ class DetailMovieViewModel(private val filmRepository: FilmRepository) :
 
     fun getConfiguration(): LiveData<ImagesEntity> = filmRepository.getConfiguration()
 
-    var movieDetail: LiveData<Resource<MovieDetailEntity>> =
+    var movieDetail: LiveData<Resource<MovieEntity>> =
         Transformations.switchMap(movieId) { mMovieId ->
             filmRepository.getMovieDetail(mMovieId)
         }
@@ -31,17 +31,10 @@ class DetailMovieViewModel(private val filmRepository: FilmRepository) :
             val movieDetailEntity = movieDetailResource.data
 
             movieDetailEntity?.let {
-                val movieEntity = MovieEntity(
-                    it.id,
-                    it.title,
-                    StringBuilder(it.overview).toString(),
-                    it.releaseDate, it.voteAverage, it.posterPath, it.backdropPath,
-                )
 
                 val newState = !it.bookmarked
 
-                filmRepository.setMovieBookmark(movieEntity, newState)
-                filmRepository.setMovieDetailBookmark(it, newState)
+                filmRepository.setMovieBookmark(it, newState)
             }
         }
     }
