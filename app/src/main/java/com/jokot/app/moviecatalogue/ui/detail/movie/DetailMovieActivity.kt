@@ -1,9 +1,12 @@
 package com.jokot.app.moviecatalogue.ui.detail.movie
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -20,12 +23,16 @@ class DetailMovieActivity : AppCompatActivity() {
         const val EXTRA_MOVIE_ID = "extra movie id"
     }
 
+    private lateinit var activityDetailMovieBinding: ActivityDetailMovieBinding
     private lateinit var contentDetailMovieBinding: ContentDetailMovieBinding
+
+    private lateinit var viewModel: DetailMovieViewModel
+    private var menu: Menu? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val activityDetailMovieBinding = ActivityDetailMovieBinding.inflate(layoutInflater)
+        activityDetailMovieBinding = ActivityDetailMovieBinding.inflate(layoutInflater)
         contentDetailMovieBinding = activityDetailMovieBinding.detailMovie
 
         setContentView(activityDetailMovieBinding.root)
@@ -34,7 +41,7 @@ class DetailMovieActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val factory = ViewModelFactory.getInstance(this)
-        val viewModel = ViewModelProvider(this, factory)[DetailMovieViewModel::class.java]
+        viewModel = ViewModelProvider(this, factory)[DetailMovieViewModel::class.java]
 
         val extras = intent.extras
         if (extras != null) {
@@ -102,6 +109,57 @@ class DetailMovieActivity : AppCompatActivity() {
                         .error(R.drawable.ic_error)
                 )
                 .into(imgBanner)
+        }
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_detail, menu)
+        this.menu = menu
+        viewModel.movieDetail.observe(this, { movieDetailResource ->
+            if (movieDetailResource != null) {
+                when (movieDetailResource.status) {
+                    Status.LOADING -> {
+                        activityDetailMovieBinding.progressBar.visibility = View.VISIBLE
+                        contentDetailMovieBinding.root.visibility = View.GONE
+                    }
+                    Status.SUCCESS -> if (movieDetailResource.data != null) {
+                        activityDetailMovieBinding.progressBar.visibility = View.GONE
+                        contentDetailMovieBinding.root.visibility = View.VISIBLE
+                        val state = movieDetailResource.data.bookmarked
+                        setBookmarkState(state)
+                    }
+                    Status.ERROR -> {
+                        activityDetailMovieBinding.progressBar.visibility = View.GONE
+                        contentDetailMovieBinding.root.visibility = View.VISIBLE
+                        Toast.makeText(
+                            applicationContext,
+                            "Terjadi kesalahan",
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
+                    }
+                }
+            }
+        })
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.action_favorite){
+            viewModel.setBookmark()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun setBookmarkState(state: Boolean) {
+        if (menu == null) return
+        val menuItem = menu?.findItem(R.id.action_favorite)
+        if (state) {
+            menuItem?.icon = ContextCompat.getDrawable(this, R.drawable.ic_favorite)
+        } else {
+            menuItem?.icon = ContextCompat.getDrawable(this, R.drawable.ic_favorite_border)
         }
     }
 }

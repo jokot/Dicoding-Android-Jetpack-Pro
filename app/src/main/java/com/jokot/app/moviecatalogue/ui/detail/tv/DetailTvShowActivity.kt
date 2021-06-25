@@ -1,9 +1,12 @@
 package com.jokot.app.moviecatalogue.ui.detail.tv
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -21,12 +24,16 @@ class DetailTvShowActivity : AppCompatActivity() {
         const val EXTRA_TV_SHOW_ID = "extra tv show id"
     }
 
+    private lateinit var activityDetailTvShowBinding: ActivityDetailTvShowBinding
     private lateinit var contentDetailTvShowBinding: ContentDetailTvShowBinding
+
+    private lateinit var viewModel: DetailTvShowViewModel
+    private var menu: Menu? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val activityDetailTvShowBinding = ActivityDetailTvShowBinding.inflate(layoutInflater)
+        activityDetailTvShowBinding = ActivityDetailTvShowBinding.inflate(layoutInflater)
         contentDetailTvShowBinding = activityDetailTvShowBinding.detailTvShow
 
         setContentView(activityDetailTvShowBinding.root)
@@ -35,7 +42,7 @@ class DetailTvShowActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val factory = ViewModelFactory.getInstance(this)
-        val viewModel = ViewModelProvider(this, factory)[DetailTvShowViewModel::class.java]
+        viewModel = ViewModelProvider(this, factory)[DetailTvShowViewModel::class.java]
 
         val extras = intent.extras
         if (extras != null) {
@@ -102,6 +109,58 @@ class DetailTvShowActivity : AppCompatActivity() {
                     RequestOptions.placeholderOf(R.drawable.ic_loading).error(R.drawable.ic_error)
                 )
                 .into(imgBanner)
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_detail, menu)
+        this.menu = menu
+        viewModel.tvShowDetail.observe(this,{ tvShowDetailResource ->
+            if (tvShowDetailResource != null ){
+                when(tvShowDetailResource.status){
+                    Status.LOADING -> {
+                        activityDetailTvShowBinding.progressBar.visibility =
+                            View.VISIBLE
+                        contentDetailTvShowBinding.root.visibility = View.GONE
+                    }
+                    Status.SUCCESS -> if (tvShowDetailResource.data != null) {
+                        activityDetailTvShowBinding.progressBar.visibility = View.GONE
+                        contentDetailTvShowBinding.root.visibility = View.VISIBLE
+                        val state = tvShowDetailResource.data.bookmarked
+                        setBookmarkState(state)
+                    }
+                    Status.ERROR -> {
+                        activityDetailTvShowBinding.progressBar.visibility = View.GONE
+                        contentDetailTvShowBinding.root.visibility = View.VISIBLE
+                        Toast.makeText(
+                            applicationContext,
+                            "Terjadi kesalahan",
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
+                    }
+                }
+            }
+
+        })
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.action_favorite) {
+            viewModel.setBookmark()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun setBookmarkState(state: Boolean) {
+        if (menu == null) return
+        val menuItem = menu?.findItem(R.id.action_favorite)
+        if (state) {
+            menuItem?.icon = ContextCompat.getDrawable(this, R.drawable.ic_favorite)
+        } else {
+            menuItem?.icon = ContextCompat.getDrawable(this, R.drawable.ic_favorite_border)
         }
     }
 }

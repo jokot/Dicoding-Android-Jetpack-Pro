@@ -71,7 +71,7 @@ class BookmarkFragment : Fragment() {
                                 tvShowAdapter.notifyDataSetChanged()
                             })
                             with(binding?.rvBookmark) {
-                                this?.adapter = movieAdapter
+                                this?.adapter = tvShowAdapter
                             }
                         }
                     }
