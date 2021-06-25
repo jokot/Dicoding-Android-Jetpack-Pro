@@ -10,7 +10,7 @@ import com.jokot.app.moviecatalogue.data.source.local.entity.TvShowDetailEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.TvShowEntity
 
 
-@Database(entities = [MovieEntity::class, TvShowEntity::class, TvShowDetailEntity::class],
+@Database(entities = [MovieEntity::class, TvShowEntity::class],
     version = 1,
     exportSchema = false
 )

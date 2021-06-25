@@ -13,6 +13,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.jokot.app.moviecatalogue.R
 import com.jokot.app.moviecatalogue.data.source.local.entity.ImagesEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.TvShowDetailEntity
+import com.jokot.app.moviecatalogue.data.source.local.entity.TvShowEntity
 import com.jokot.app.moviecatalogue.databinding.ActivityDetailTvShowBinding
 import com.jokot.app.moviecatalogue.databinding.ContentDetailTvShowBinding
 import com.jokot.app.moviecatalogue.viewmodel.ViewModelFactory
@@ -84,15 +85,15 @@ class DetailTvShowActivity : AppCompatActivity() {
         }
     }
 
-    private fun populateTvShow(tvShow: TvShowDetailEntity, images: ImagesEntity) {
+    private fun populateTvShow(tvShow: TvShowEntity, images: ImagesEntity) {
         with(contentDetailTvShowBinding) {
-            textTitle.text = tvShow.name
-            textDate.text = tvShow.firstAirDate
-            textDuration.text = tvShow.episodeRunTime
-            textGenre.text = tvShow.genres
+            textTitle.text = tvShow.title
+            textDate.text = tvShow.releaseDate
+            textDuration.text = tvShow.tvShowDetailEntity?.episodeRunTime
+            textGenre.text = tvShow.tvShowDetailEntity?.genres
             textOverview.text = tvShow.overview
-            textScore.text = StringBuilder("${tvShow.voteAverage}%")
-            textYear.text = tvShow.firstAirDate.takeLast(4)
+            textScore.text = StringBuilder("${tvShow.score}%")
+            textYear.text = tvShow.releaseDate.takeLast(4)
 
             val posterPath = images.secureBaseUrl + images.posterSizes[1] + tvShow.posterPath
             Glide.with(this@DetailTvShowActivity)
@@ -102,7 +103,7 @@ class DetailTvShowActivity : AppCompatActivity() {
                 )
                 .into(imgPoster)
 
-            val backdropPath = images.secureBaseUrl + images.backdropSizes[1] + tvShow.backdropPath
+            val backdropPath = images.secureBaseUrl + images.backdropSizes[1] + tvShow.bannerPath
             Glide.with(this@DetailTvShowActivity)
                 .load(backdropPath)
                 .apply(

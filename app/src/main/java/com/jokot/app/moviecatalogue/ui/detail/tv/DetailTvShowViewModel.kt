@@ -19,7 +19,7 @@ class DetailTvShowViewModel(private val filmRepository: FilmRepository) : ViewMo
 
     fun getConfiguration(): LiveData<ImagesEntity> = filmRepository.getConfiguration()
 
-    var tvShowDetail: LiveData<Resource<TvShowDetailEntity>> =
+    var tvShowDetail: LiveData<Resource<TvShowEntity>> =
         Transformations.switchMap(tvShowId) { mTvShowId ->
             filmRepository.getTvShowDetail(mTvShowId)
         }
@@ -31,19 +31,9 @@ class DetailTvShowViewModel(private val filmRepository: FilmRepository) : ViewMo
             val tvShowDetailEntity = tvShowDetailResource.data
 
             tvShowDetailEntity?.let {
-                val tvShowEntity = TvShowEntity(
-                    it.id,
-                    it.name,
-                    it.overview,
-                    it.firstAirDate,
-                    it.voteAverage,
-                    it.posterPath,
-                    it.backdropPath,
-                    it.bookmarked
-                )
+
                 val newState = !it.bookmarked
-                filmRepository.setTvShowBookmark(tvShowEntity, newState)
-                filmRepository.setTvShowDetailBookmark(it, newState)
+                filmRepository.setTvShowBookmark(it, newState)
             }
         }
     }

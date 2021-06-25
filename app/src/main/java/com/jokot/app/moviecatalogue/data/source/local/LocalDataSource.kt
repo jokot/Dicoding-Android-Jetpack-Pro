@@ -1,7 +1,6 @@
 package com.jokot.app.moviecatalogue.data.source.local
 
 import androidx.lifecycle.LiveData
-import com.jokot.app.moviecatalogue.data.source.local.entity.MovieDetailEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.MovieEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.TvShowDetailEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.TvShowEntity
@@ -17,7 +16,7 @@ class LocalDataSource private constructor(private val mFilmDao: FilmDao) {
 
     fun getMovieWithDetail(movieId: Int): LiveData<MovieEntity> = mFilmDao.getMovieById(movieId)
 
-    fun getTvShowDetail(tvShowId: Int): LiveData<TvShowDetailEntity> = mFilmDao.getTvShowDetail(tvShowId)
+    fun getTvShowWithDetail(tvShowId: Int): LiveData<TvShowEntity> = mFilmDao.getTvShowById(tvShowId)
 
     fun getNowPlayingMovies(): LiveData<List<MovieEntity>> = mFilmDao.getNowPlayingMovies()
 
@@ -39,8 +38,6 @@ class LocalDataSource private constructor(private val mFilmDao: FilmDao) {
 
     fun insertTvShow(tvShows: List<TvShowEntity>) = mFilmDao.insertTvShows(tvShows)
 
-    fun insertTvShowDetail(tvShow: TvShowDetailEntity) = mFilmDao.insertTvShowDetail(tvShow)
-
     fun getBookmarkedMovie(): LiveData<List<MovieEntity>> = mFilmDao.getBookmarkedMovie()
 
     fun getBookmarkedTvShow(): LiveData<List<TvShowEntity>> = mFilmDao.getBookmarkedTvShow()
@@ -48,6 +45,11 @@ class LocalDataSource private constructor(private val mFilmDao: FilmDao) {
     fun updateMovieDetail(duration: String, genres: String, movieId: Int){
         mFilmDao.updateMovieByDetail(duration, genres,  movieId)
     }
+
+    fun updateTvShowDetail(duration: String, genres: String, tvShowId: Int){
+        mFilmDao.updateTvShowByDetail(duration, genres,  tvShowId)
+    }
+
 
     fun setMovieBookmark(movie: MovieEntity, newState: Boolean) {
         movie.bookmarked = newState
@@ -59,8 +61,4 @@ class LocalDataSource private constructor(private val mFilmDao: FilmDao) {
         mFilmDao.updateTvShow(tvShow)
     }
 
-    fun setTvShowDetailBookmark(tvShow: TvShowDetailEntity, newState: Boolean) {
-        tvShow.bookmarked = newState
-        mFilmDao.updateTvShowDetail(tvShow)
-    }
 }

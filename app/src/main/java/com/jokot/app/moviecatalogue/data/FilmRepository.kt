@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import com.jokot.app.moviecatalogue.data.source.local.LocalDataSource
 import com.jokot.app.moviecatalogue.data.source.local.entity.ImagesEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.MovieEntity
-import com.jokot.app.moviecatalogue.data.source.local.entity.TvShowDetailEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.TvShowEntity
 import com.jokot.app.moviecatalogue.data.source.remote.ApiResponse
 import com.jokot.app.moviecatalogue.data.source.remote.RemoteDataSource
@@ -88,13 +87,12 @@ class FilmRepository private constructor(
         }.asLiveData()
     }
 
-    override fun getTvShowDetail(tvShowId: Int): LiveData<Resource<TvShowDetailEntity>> {
-        return object :
-            NetworkBoundResource<TvShowDetailEntity, TvShowDetailResponse>(appExecutors) {
-            override fun loadFromDB(): LiveData<TvShowDetailEntity> =
-                localDataSource.getTvShowDetail(tvShowId)
+    override fun getTvShowDetail(tvShowId: Int): LiveData<Resource<TvShowEntity>> {
+        return object : NetworkBoundResource<TvShowEntity, TvShowDetailResponse>(appExecutors) {
+            override fun loadFromDB(): LiveData<TvShowEntity> =
+                localDataSource.getTvShowWithDetail(tvShowId)
 
-            override fun shouldFetch(data: TvShowDetailEntity?): Boolean =
+            override fun shouldFetch(data: TvShowEntity?): Boolean =
                 data == null
 
             override fun createCall(): LiveData<ApiResponse<TvShowDetailResponse>> =
@@ -106,31 +104,12 @@ class FilmRepository private constructor(
                 for (genre in tvShowDetailResponse.genres) {
                     genres.add(genre.name)
                 }
-                val tvShow = TvShowDetailEntity(
-                    tvShowDetailResponse.backdropPath,
-                    convertRunTimeToDuration(tvShowDetailResponse.episodeRunTime.average().toInt()),
-                    convertDateFormat(tvShowDetailResponse.firstAirDate),
-                    genres.joinToString(),
-                    tvShowDetailResponse.homepage,
-                    tvShowDetailResponse.id,
-                    tvShowDetailResponse.inProduction,
-                    convertDateFormat(tvShowDetailResponse.lastAirDate),
-                    tvShowDetailResponse.name,
-                    tvShowDetailResponse.numberOfEpisodes,
-                    tvShowDetailResponse.numberOfSeasons,
-                    tvShowDetailResponse.originalLanguage,
-                    tvShowDetailResponse.originalName,
-                    tvShowDetailResponse.overview,
-                    tvShowDetailResponse.popularity,
-                    tvShowDetailResponse.posterPath,
-                    tvShowDetailResponse.status,
-                    tvShowDetailResponse.tagline,
-                    tvShowDetailResponse.type,
-                    (tvShowDetailResponse.voteAverage * 10).toInt(),
-                    tvShowDetailResponse.voteCount
-                )
 
-                localDataSource.insertTvShowDetail(tvShow)
+                localDataSource.updateTvShowDetail(
+                    convertRunTimeToDuration(tvShowDetailResponse.episodeRunTime.average().toInt()),
+                    genres.joinToString(),
+                    tvShowId
+                )
             }
 
         }.asLiveData()
@@ -411,7 +390,4 @@ class FilmRepository private constructor(
     override fun setTvShowBookmark(tvShow: TvShowEntity, state: Boolean) =
         appExecutors.diskIO().execute { localDataSource.setTvShowBookmark(tvShow, state) }
 
-    override fun setTvShowDetailBookmark(tvShow: TvShowDetailEntity, state: Boolean) {
-        appExecutors.diskIO().execute { localDataSource.setTvShowDetailBookmark(tvShow, state) }
-    }
 }

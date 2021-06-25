@@ -2,6 +2,7 @@ package com.jokot.app.moviecatalogue.data.source.local.entity
 
 import androidx.annotation.NonNull
 import androidx.room.ColumnInfo
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -44,4 +45,7 @@ data class TvShowEntity(
 
     @ColumnInfo(name = "isAiringToday")
     var isAiringToday: Boolean = false,
-)
+) {
+    @Embedded
+    var tvShowDetailEntity: TvShowDetailEntity? = null
+}

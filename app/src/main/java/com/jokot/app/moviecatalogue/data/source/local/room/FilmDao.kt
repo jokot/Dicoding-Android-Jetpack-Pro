@@ -14,8 +14,8 @@ interface FilmDao {
     @Query("SELECT * FROM movie_entities WHERE movieId = :movieId")
     fun getMovieById(movieId: Int): LiveData<MovieEntity>
 
-    @Query("SELECT * FROM tv_show_detail_entities WHERE tvShowDetailId = :tvShowId")
-    fun getTvShowDetail(tvShowId: Int): LiveData<TvShowDetailEntity>
+    @Query("SELECT * FROM tv_show_entities WHERE tvShowId = :tvShowId")
+    fun getTvShowById(tvShowId: Int): LiveData<TvShowEntity>
 
     @Query("SELECT * FROM movie_entities WHERE isNowPlaying = 1")
     fun getNowPlayingMovies(): LiveData<List<MovieEntity>>
@@ -53,19 +53,16 @@ interface FilmDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertTvShows(tvSows: List<TvShowEntity>)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertTvShowDetail(tvShow: TvShowDetailEntity)
-
-
     @Update
     fun updateMovie(movie: MovieEntity)
-
-    @Query("UPDATE movie_entities SET duration = :duration, genres = :genres WHERE movieId = :movieId")
-    fun updateMovieByDetail(duration: String, genres: String, movieId: Int)
 
     @Update
     fun updateTvShow(tvShow: TvShowEntity)
 
-    @Update
-    fun updateTvShowDetail(tvShow: TvShowDetailEntity)
+    @Query("UPDATE movie_entities SET duration = :duration, genres = :genres WHERE movieId = :movieId")
+    fun updateMovieByDetail(duration: String, genres: String, movieId: Int)
+
+    @Query("UPDATE tv_show_entities SET episodeRunTime = :duration, genres = :genres WHERE tvShowId = :tvShowId")
+    fun updateTvShowByDetail(duration: String, genres: String, tvShowId: Int)
+
 }
