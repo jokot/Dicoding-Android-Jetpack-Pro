@@ -42,9 +42,9 @@ class MovieFragment : Fragment() {
 
             binding?.progressBar?.visibility = View.VISIBLE
             viewModel.getConfiguration().observe(viewLifecycleOwner, { images ->
-                viewModel.getInitData().getContentIfNotHandled()?.let {
+                viewModel.getInitData().getContentIfNotHandled()?.let { it ->
                     it.observe(viewLifecycleOwner, { movies ->
-                        movies?.let { setupUiOnStatus(movies, images) }
+                        movies?.let { setupOnStatus(movies, images) }
                     })
                 }
             })
@@ -55,22 +55,22 @@ class MovieFragment : Fragment() {
                     when (checkedId) {
                         binding?.chip1?.id -> {
                             viewModel.getNowPlayingMovies().observe(viewLifecycleOwner, { movies ->
-                                movies?.let { setupUiOnStatus(movies, images) }
+                                movies?.let { setupOnStatus(movies, images) }
                             })
                         }
                         binding?.chip2?.id -> {
                             viewModel.getPopularMovies().observe(viewLifecycleOwner, { movies ->
-                                movies?.let { setupUiOnStatus(movies, images) }
+                                movies?.let { setupOnStatus(movies, images) }
                             })
                         }
                         binding?.chip3?.id -> {
                             viewModel.getTopRatedMovies().observe(viewLifecycleOwner, { movies ->
-                                movies?.let { setupUiOnStatus(movies, images) }
+                                movies?.let { setupOnStatus(movies, images) }
                             })
                         }
                         binding?.chip4?.id -> {
                             viewModel.getUpcomingMovies().observe(viewLifecycleOwner, { movies ->
-                                movies?.let { setupUiOnStatus(movies, images) }
+                                movies?.let { setupOnStatus(movies, images) }
                             })
                         }
 
@@ -86,7 +86,7 @@ class MovieFragment : Fragment() {
         }
     }
 
-    private fun setupUiOnStatus(movies: Resource<List<MovieEntity>>, images: ImagesEntity) {
+    private fun setupOnStatus(movies: Resource<List<MovieEntity>>, images: ImagesEntity) {
         when (movies.status) {
             Status.LOADING -> binding?.progressBar?.visibility = View.VISIBLE
             Status.SUCCESS -> {

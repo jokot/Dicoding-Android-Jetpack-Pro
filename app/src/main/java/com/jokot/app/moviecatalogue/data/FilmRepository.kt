@@ -141,7 +141,7 @@ class FilmRepository private constructor(
                     )
                     movieList.add(movie)
                 }
-                localDataSource.insertMovies(movieList)
+                appExecutors.diskIO().execute { localDataSource.insertOrUpdateNowPlayingMovie(movieList)}
             }
 
         }.asLiveData()
@@ -174,7 +174,7 @@ class FilmRepository private constructor(
                     movieList.add(movie)
                 }
 
-                localDataSource.insertMovies(movieList)
+                appExecutors.diskIO().execute { localDataSource.insertOrUpdatePopularMovie(movieList) }
             }
 
         }.asLiveData()
@@ -207,7 +207,7 @@ class FilmRepository private constructor(
                     movieList.add(movie)
                 }
 
-                localDataSource.insertMovies(movieList)
+                appExecutors.diskIO().execute { localDataSource.insertOrUpdateTopRatedMovie(movieList)}
             }
 
         }.asLiveData()
@@ -240,7 +240,7 @@ class FilmRepository private constructor(
                     movieList.add(movie)
                 }
 
-                localDataSource.insertMovies(movieList)
+                appExecutors.diskIO().execute { localDataSource.insertOrUpdateUpcomingMovie(movieList) }
             }
 
         }.asLiveData()

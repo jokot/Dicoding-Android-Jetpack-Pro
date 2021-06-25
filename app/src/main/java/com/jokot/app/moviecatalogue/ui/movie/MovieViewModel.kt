@@ -13,7 +13,7 @@ class MovieViewModel(private val filmRepository: FilmRepository) : ViewModel() {
     fun getConfiguration(): LiveData<ImagesEntity> = filmRepository.getConfiguration()
 
     fun getInitData(): Event<LiveData<Resource<List<MovieEntity>>>> =
-        Event(filmRepository.getNowPlayingMovies())
+        Event(getNowPlayingMovies())
 
     fun getNowPlayingMovies(): LiveData<Resource<List<MovieEntity>>> =
         filmRepository.getNowPlayingMovies()

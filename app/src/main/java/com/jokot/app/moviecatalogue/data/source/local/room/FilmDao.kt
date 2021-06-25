@@ -2,9 +2,7 @@ package com.jokot.app.moviecatalogue.data.source.local.room
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.jokot.app.moviecatalogue.data.source.local.entity.MovieDetailEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.MovieEntity
-import com.jokot.app.moviecatalogue.data.source.local.entity.TvShowDetailEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.TvShowEntity
 
 
@@ -47,14 +45,17 @@ interface FilmDao {
     @Query("SELECT * FROM tv_show_entities WHERE bookmarked = 1")
     fun getBookmarkedTvShow(): LiveData<List<TvShowEntity>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertMovies(movies: List<MovieEntity>)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertTvShows(tvSows: List<TvShowEntity>)
 
     @Update
     fun updateMovie(movie: MovieEntity)
+
+    @Update
+    fun updateMovies(movies: List<MovieEntity>)
 
     @Update
     fun updateTvShow(tvShow: TvShowEntity)

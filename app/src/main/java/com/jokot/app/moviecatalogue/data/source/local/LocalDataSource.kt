@@ -2,7 +2,6 @@ package com.jokot.app.moviecatalogue.data.source.local
 
 import androidx.lifecycle.LiveData
 import com.jokot.app.moviecatalogue.data.source.local.entity.MovieEntity
-import com.jokot.app.moviecatalogue.data.source.local.entity.TvShowDetailEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.TvShowEntity
 import com.jokot.app.moviecatalogue.data.source.local.room.FilmDao
 
@@ -34,7 +33,63 @@ class LocalDataSource private constructor(private val mFilmDao: FilmDao) {
 
     fun getAiringTodayTvShows(): LiveData<List<TvShowEntity>> = mFilmDao.getAiringTodayTvShows()
 
-    fun insertMovies(movies: List<MovieEntity>) = mFilmDao.insertMovies(movies)
+    private fun insertMovies(movies: List<MovieEntity>) = mFilmDao.insertMovies(movies)
+
+    fun insertOrUpdateNowPlayingMovie(movies: List<MovieEntity>) {
+        val savedMovie = ArrayList<MovieEntity>()
+        val notSavedMovie = ArrayList<MovieEntity>()
+        for (movie in movies) {
+            if (getMovieWithDetail(movie.movieId).value != null) {
+                savedMovie.add(movie)
+            } else {
+                notSavedMovie.add(movie)
+            }
+        }
+        setMovieIsNowPlaying(savedMovie)
+        insertMovies(notSavedMovie)
+    }
+
+    fun insertOrUpdatePopularMovie(movies: List<MovieEntity>) {
+        val savedMovie = ArrayList<MovieEntity>()
+        val notSavedMovie = ArrayList<MovieEntity>()
+        for (movie in movies) {
+            if (getMovieWithDetail(movie.movieId).value != null) {
+                savedMovie.add(movie)
+            } else {
+                notSavedMovie.add(movie)
+            }
+        }
+        setMovieIsPopular(savedMovie)
+        insertMovies(notSavedMovie)
+    }
+
+    fun insertOrUpdateTopRatedMovie(movies: List<MovieEntity>) {
+        val savedMovie = ArrayList<MovieEntity>()
+        val notSavedMovie = ArrayList<MovieEntity>()
+        for (movie in movies) {
+            if (getMovieWithDetail(movie.movieId).value != null) {
+                savedMovie.add(movie)
+            } else {
+                notSavedMovie.add(movie)
+            }
+        }
+        setMovieIsTopRated(savedMovie)
+        insertMovies(notSavedMovie)
+    }
+
+    fun insertOrUpdateUpcomingMovie(movies: List<MovieEntity>) {
+        val savedMovie = ArrayList<MovieEntity>()
+        val notSavedMovie = ArrayList<MovieEntity>()
+        for (movie in movies) {
+            if (getMovieWithDetail(movie.movieId).value != null) {
+                savedMovie.add(movie)
+            } else {
+                notSavedMovie.add(movie)
+            }
+        }
+        setMovieIsUpcoming(savedMovie)
+        insertMovies(notSavedMovie)
+    }
 
     fun insertTvShow(tvShows: List<TvShowEntity>) = mFilmDao.insertTvShows(tvShows)
 
@@ -61,4 +116,36 @@ class LocalDataSource private constructor(private val mFilmDao: FilmDao) {
         mFilmDao.updateTvShow(tvShow)
     }
 
+    private fun setMovieIsNowPlaying(movies: List<MovieEntity>) {
+        val nowPlayingMovies = ArrayList<MovieEntity>()
+        for (movie in movies) {
+            movie.isNowPlaying = true
+            nowPlayingMovies.add(movie)
+        }
+        mFilmDao.updateMovies(nowPlayingMovies)
+    }
+    private fun setMovieIsPopular(movies: List<MovieEntity>) {
+        val popularMovies = ArrayList<MovieEntity>()
+        for (movie in movies) {
+            movie.isPopular = true
+            popularMovies.add(movie)
+        }
+        mFilmDao.updateMovies(popularMovies)
+    }
+    private fun setMovieIsTopRated(movies: List<MovieEntity>) {
+        val topRatedMovies = ArrayList<MovieEntity>()
+        for (movie in movies) {
+            movie.isTopRated = true
+            topRatedMovies.add(movie)
+        }
+        mFilmDao.updateMovies(topRatedMovies)
+    }
+    private fun setMovieIsUpcoming(movies: List<MovieEntity>) {
+        val upcomingMovies = ArrayList<MovieEntity>()
+        for (movie in movies) {
+            movie.isUpcoming = true
+            upcomingMovies.add(movie)
+        }
+        mFilmDao.updateMovies(upcomingMovies)
+    }
 }
