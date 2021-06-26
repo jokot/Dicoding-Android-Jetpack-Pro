@@ -33,6 +33,7 @@ class HomeActivityTest {
 
     @Test
     fun loadNowPlayingMovie() {
+        onView(withText(R.string.now_playing)).perform(click())
         onView(withId(R.id.rv_movie)).check(matches(isDisplayed()))
         onView(withId(R.id.rv_movie)).perform(
             RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(
@@ -54,6 +55,8 @@ class HomeActivityTest {
 
     @Test
     fun loadDetailMovie() {
+        onView(withText(R.string.now_playing)).perform(click())
+        onView(withId(R.id.rv_movie)).check(matches(isDisplayed()))
         onView(withId(R.id.rv_movie)).perform(
             RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
                 0,
@@ -73,6 +76,7 @@ class HomeActivityTest {
     @Test
     fun loadOnAirTvShow() {
         onView(withText(R.string.tv_shows)).perform(click())
+        onView(withText(R.string.on_air)).perform(click())
         onView(withId(R.id.rv_tv_show)).check(matches(isDisplayed()))
         onView(withId(R.id.rv_tv_show)).perform(
             RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(
@@ -96,6 +100,7 @@ class HomeActivityTest {
     @Test
     fun loadDetailTvShow() {
         onView(withText(R.string.tv_shows)).perform(click())
+        onView(withId(R.id.rv_tv_show)).check(matches(isDisplayed()))
         onView(withId(R.id.rv_tv_show)).perform(
             RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
                 0,
@@ -114,6 +119,8 @@ class HomeActivityTest {
 
     @Test
     fun loadFavoriteMovie() {
+        onView(withText(R.string.movies)).perform(click())
+        onView(withText(R.string.now_playing)).perform(click())
         onView(withId(R.id.rv_movie)).perform(
             RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
                 0,
@@ -149,6 +156,7 @@ class HomeActivityTest {
     @Test
     fun loadFavoriteTvShow() {
         onView(withText(R.string.tv_shows)).perform(click())
+        onView(withText(R.string.on_air)).perform(click())
         onView(withId(R.id.rv_tv_show)).perform(
             RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
                 0,
