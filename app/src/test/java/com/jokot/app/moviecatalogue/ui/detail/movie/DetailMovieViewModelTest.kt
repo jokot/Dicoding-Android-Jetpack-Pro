@@ -5,8 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.jokot.app.moviecatalogue.data.FilmRepository
 import com.jokot.app.moviecatalogue.data.source.local.entity.ImageEntity
-import com.jokot.app.moviecatalogue.data.source.local.entity.MovieDetailEntity
+import com.jokot.app.moviecatalogue.data.source.local.entity.MovieEntity
 import com.jokot.app.moviecatalogue.utils.DataDummy
+import com.jokot.app.moviecatalogue.vo.Resource
 import com.nhaarman.mockitokotlin2.verify
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -21,8 +22,9 @@ import org.mockito.junit.MockitoJUnitRunner
 @RunWith(MockitoJUnitRunner::class)
 class DetailMovieViewModelTest {
     private lateinit var viewModel: DetailMovieViewModel
-    private val dummyMovie = DataDummy.generateDummyMovieDetail()
-    private val movieId = dummyMovie.movieDetailId
+    private val dummyMovie = DataDummy.generateDummyMovies()[0]
+    private val movieId = dummyMovie.movieId
+    private val dummyMovieWithDetail = DataDummy.generateDummyMovieWithDetail(movieId)
     private val dummyConfig = DataDummy.generateDummyConfig()
 
     @get:Rule
@@ -32,10 +34,10 @@ class DetailMovieViewModelTest {
     private lateinit var filmRepository: FilmRepository
 
     @Mock
-    private lateinit var observerMovie: Observer<MovieDetailEntity>
+    private lateinit var observerMovie: Observer<Resource<MovieEntity>>
 
     @Mock
-    private lateinit var observerImage: Observer<ImageEntity>
+    private lateinit var observerImage: Observer<Resource<ImageEntity>>
 
     @Before
     fun setup() {
@@ -44,14 +46,15 @@ class DetailMovieViewModelTest {
 
     @Test
     fun getConfiguration() {
-        val images = MutableLiveData<ImageEntity>()
+        val dummyConfig = Resource.success(dummyConfig)
+        val images = MutableLiveData<Resource<ImageEntity>>()
         images.value = dummyConfig
 
         `when`(filmRepository.getConfiguration()).thenReturn(images)
-        val imagesEntity = viewModel.getConfiguration().value
+        val imagesEntity = viewModel.getConfiguration().value?.data
         verify(filmRepository).getConfiguration()
         assertNotNull(imagesEntity)
-        assertEquals(dummyConfig.posterSize.size, imagesEntity?.posterSize?.size)
+        assertEquals(dummyConfig.data?.posterSize, imagesEntity?.posterSize)
 
         viewModel.getConfiguration().observeForever(observerImage)
         verify(observerImage).onChanged(dummyConfig)
@@ -59,24 +62,14 @@ class DetailMovieViewModelTest {
 
     @Test
     fun getMovieDetail() {
-        val movie = MutableLiveData<MovieDetailEntity>()
+        val dummyMovie = Resource.success(dummyMovieWithDetail)
+        val movie = MutableLiveData<Resource<MovieEntity>>()
         movie.value = dummyMovie
 
         `when`(filmRepository.getMovieDetail(movieId)).thenReturn(movie)
         viewModel.setSelectedMovie(movieId)
-        val movieEntity = viewModel.getMovieDetail().value
-        verify(filmRepository).getMovieDetail(movieId)
-        assertNotNull(movieEntity)
-        assertEquals(dummyMovie.movieDetailId, movieEntity?.id)
-        assertEquals(dummyMovie.title, movieEntity?.title)
-        assertEquals(dummyMovie.overview, movieEntity?.overview)
-        assertEquals(dummyMovie.releaseDate, movieEntity?.releaseDate)
-        assertEquals(dummyMovie.genres, movieEntity?.genres)
-        assertEquals(dummyMovie.voteAverage, movieEntity?.voteAverage)
-        assertEquals(dummyMovie.posterPath, movieEntity?.posterPath)
-        assertEquals(dummyMovie.backdropPath, movieEntity?.backdropPath)
 
-        viewModel.getMovieDetail().observeForever(observerMovie)
+        viewModel.movieDetail.observeForever(observerMovie)
         verify(observerMovie).onChanged(dummyMovie)
     }
 }

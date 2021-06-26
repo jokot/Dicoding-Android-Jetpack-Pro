@@ -5,8 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.jokot.app.moviecatalogue.data.FilmRepository
 import com.jokot.app.moviecatalogue.data.source.local.entity.ImageEntity
-import com.jokot.app.moviecatalogue.data.source.local.entity.TvShowDetailEntity
+import com.jokot.app.moviecatalogue.data.source.local.entity.TvShowEntity
 import com.jokot.app.moviecatalogue.utils.DataDummy
+import com.jokot.app.moviecatalogue.vo.Resource
 import com.nhaarman.mockitokotlin2.verify
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
@@ -21,8 +22,9 @@ import org.mockito.junit.MockitoJUnitRunner
 @RunWith(MockitoJUnitRunner::class)
 class DetailTvShowViewModelTest {
     private lateinit var viewModel: DetailTvShowViewModel
-    private val dummyTvShow = DataDummy.generateDummyTvShowDetail()
+    private val dummyTvShow = DataDummy.generateDummyTvShows()[0]
     private val tvShowId = dummyTvShow.id
+    private val dummyTvShowWithDetail = DataDummy.generateDummyTvShowWithDetail(tvShowId)
     private val dummyConfig = DataDummy.generateDummyConfig()
 
     @get:Rule
@@ -32,10 +34,10 @@ class DetailTvShowViewModelTest {
     private lateinit var filmRepository: FilmRepository
 
     @Mock
-    private lateinit var observerTvShow: Observer<TvShowDetailEntity>
+    private lateinit var observerTvShow: Observer<Resource<TvShowEntity>>
 
     @Mock
-    private lateinit var observerImage: Observer<ImageEntity>
+    private lateinit var observerImage: Observer<Resource<ImageEntity>>
 
     @Before
     fun setUp() {
@@ -44,14 +46,15 @@ class DetailTvShowViewModelTest {
 
     @Test
     fun getConfiguration() {
-        val images = MutableLiveData<ImageEntity>()
+        val dummyConfig = Resource.success(dummyConfig)
+        val images = MutableLiveData<Resource<ImageEntity>>()
         images.value = dummyConfig
 
         `when`(filmRepository.getConfiguration()).thenReturn(images)
-        val imagesEntity = viewModel.getConfiguration().value
+        val imagesEntity = viewModel.getConfiguration().value?.data
         verify(filmRepository).getConfiguration()
         assertNotNull(imagesEntity)
-        assertEquals(dummyConfig.posterSize.size, imagesEntity?.posterSize?.size)
+        assertEquals(dummyConfig.data?.posterSize, imagesEntity?.posterSize)
 
         viewModel.getConfiguration().observeForever(observerImage)
         verify(observerImage).onChanged(dummyConfig)
@@ -59,24 +62,14 @@ class DetailTvShowViewModelTest {
 
     @Test
     fun getTvShowDetail() {
-        val tvShow = MutableLiveData<TvShowDetailEntity>()
+        val dummyTvShow = Resource.success(dummyTvShowWithDetail)
+        val tvShow = MutableLiveData<Resource<TvShowEntity>>()
         tvShow.value = dummyTvShow
 
         `when`(filmRepository.getTvShowDetail(tvShowId)).thenReturn(tvShow)
         viewModel.setSelectedTvShow(tvShowId)
-        val tvShowEntity = viewModel.getTvShowDetail().value
-        verify(filmRepository).getTvShowDetail(tvShowId)
-        assertNotNull(tvShowEntity)
-        assertEquals(dummyTvShow.id, tvShowEntity?.id)
-        assertEquals(dummyTvShow.name, tvShowEntity?.name)
-        assertEquals(dummyTvShow.overview, tvShowEntity?.overview)
-        assertEquals(dummyTvShow.firstAirDate, tvShowEntity?.firstAirDate)
-        assertEquals(dummyTvShow.genres, tvShowEntity?.genres)
-        assertEquals(dummyTvShow.voteAverage, tvShowEntity?.voteAverage)
-        assertEquals(dummyTvShow.posterPath, tvShowEntity?.posterPath)
-        assertEquals(dummyTvShow.backdropPath, tvShowEntity?.backdropPath)
 
-        viewModel.getTvShowDetail().observeForever(observerTvShow)
+        viewModel.tvShowDetail.observeForever(observerTvShow)
         verify(observerTvShow).onChanged(dummyTvShow)
     }
 }
