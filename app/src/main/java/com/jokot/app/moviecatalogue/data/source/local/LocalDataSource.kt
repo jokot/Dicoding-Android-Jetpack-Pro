@@ -1,6 +1,7 @@
 package com.jokot.app.moviecatalogue.data.source.local
 
 import androidx.lifecycle.LiveData
+import com.jokot.app.moviecatalogue.data.source.local.entity.ImageEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.MovieEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.TvShowEntity
 import com.jokot.app.moviecatalogue.data.source.local.room.FilmDao
@@ -13,6 +14,8 @@ class LocalDataSource private constructor(private val mFilmDao: FilmDao) {
         fun getInstance(filmDao: FilmDao): LocalDataSource =
             INSTANCE ?: LocalDataSource(filmDao)
     }
+
+    fun getImage(): LiveData<ImageEntity> = mFilmDao.getImage()
 
     fun getMovieWithDetail(movieId: Int): LiveData<MovieEntity> = mFilmDao.getMovieById(movieId)
 
@@ -34,6 +37,9 @@ class LocalDataSource private constructor(private val mFilmDao: FilmDao) {
     fun getTopRatedTvShows(): LiveData<List<TvShowEntity>> = mFilmDao.getTopRatedTvShows()
 
     fun getAiringTodayTvShows(): LiveData<List<TvShowEntity>> = mFilmDao.getAiringTodayTvShows()
+
+    fun insertImage(image: ImageEntity) =
+        mFilmDao.insertImage(image)
 
     fun insertOrUpdateNowPlayingMovie(movies: List<MovieEntity>, movieIds: List<Int>) =
         mFilmDao.insertOrUpdateNowPlayingMovie(movies, movieIds)

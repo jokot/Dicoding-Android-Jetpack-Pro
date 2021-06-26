@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.jokot.app.moviecatalogue.data.source.local.entity.ImageEntity
 import com.jokot.app.moviecatalogue.databinding.FragmentOnTheAirTvShowBinding
 import com.jokot.app.moviecatalogue.ui.tv.TvShowAdapter
 import com.jokot.app.moviecatalogue.ui.tv.TvShowViewModel
@@ -20,6 +21,7 @@ class OnTheAirTvShowFragment : Fragment() {
     private val binding get() = _fragmentOnTheAirTvShowBinding
 
     private lateinit var tvShowAdapter: TvShowAdapter
+    private lateinit var viewModel: TvShowViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,32 +37,11 @@ class OnTheAirTvShowFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         if (activity != null) {
             val factory = ViewModelFactory.getInstance(requireActivity())
-            val viewModel = ViewModelProvider(this, factory)[TvShowViewModel::class.java]
+            viewModel = ViewModelProvider(this, factory)[TvShowViewModel::class.java]
 
             tvShowAdapter = TvShowAdapter()
 
-            binding?.progressBar?.visibility = View.VISIBLE
-            binding?.rvTvShow?.visibility = View.GONE
-            viewModel.getConfiguration().observe(viewLifecycleOwner, { images ->
-                viewModel.getOnTheAirTvShow().observe(viewLifecycleOwner, { tvShows ->
-                    when (tvShows.status) {
-                        Status.LOADING -> {
-                            binding?.progressBar?.visibility = View.VISIBLE
-                            binding?.rvTvShow?.visibility = View.GONE
-                        }
-                        Status.SUCCESS -> {
-                            binding?.progressBar?.visibility = View.GONE
-                            binding?.rvTvShow?.visibility = View.VISIBLE
-                            tvShowAdapter.setTvShows(tvShows.data, images)
-                            tvShowAdapter.notifyDataSetChanged()
-                        }
-                        Status.ERROR -> {
-                            binding?.progressBar?.visibility = View.GONE
-                            Toast.makeText(context, "Terjadi kesalahan", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                })
-            })
+            observeGetConfig()
 
             with(binding?.rvTvShow) {
                 this?.layoutManager = LinearLayoutManager(context)
@@ -68,5 +49,46 @@ class OnTheAirTvShowFragment : Fragment() {
                 this?.adapter = tvShowAdapter
             }
         }
+    }
+
+    private fun observeGetConfig() {
+        viewModel.getConfiguration().observe(viewLifecycleOwner, { imageResource ->
+            if (imageResource != null){
+                when(imageResource.status){
+                    Status.LOADING ->{
+                        binding?.progressBar?.visibility = View.VISIBLE
+                        binding?.rvTvShow?.visibility = View.GONE
+                    }
+                    Status.SUCCESS ->{
+                        imageResource.data?.let { observeGetTvShow(it) }
+                    }
+                    Status.ERROR ->{
+                        binding?.progressBar?.visibility = View.GONE
+                        Toast.makeText(context, "Terjadi kesalahan", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        })
+    }
+
+    private fun observeGetTvShow(image: ImageEntity) {
+        viewModel.getOnTheAirTvShow().observe(viewLifecycleOwner, { tvShows ->
+            when (tvShows.status) {
+                Status.LOADING -> {
+                    binding?.progressBar?.visibility = View.VISIBLE
+                    binding?.rvTvShow?.visibility = View.GONE
+                }
+                Status.SUCCESS -> {
+                    binding?.progressBar?.visibility = View.GONE
+                    binding?.rvTvShow?.visibility = View.VISIBLE
+                    tvShowAdapter.setTvShows(tvShows.data, image)
+                    tvShowAdapter.notifyDataSetChanged()
+                }
+                Status.ERROR -> {
+                    binding?.progressBar?.visibility = View.GONE
+                    Toast.makeText(context, "Terjadi kesalahan", Toast.LENGTH_SHORT).show()
+                }
+            }
+        })
     }
 }

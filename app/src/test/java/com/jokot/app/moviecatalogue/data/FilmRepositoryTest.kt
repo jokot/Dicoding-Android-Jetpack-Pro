@@ -48,7 +48,7 @@ class FilmRepositoryTest {
 
         verify(remote).getConfiguration(any())
         assertNotNull(imagesEntity)
-        assertEquals(imagesResponse.posterSizes.size, imagesEntity.posterSizes.size)
+        assertEquals(imagesResponse.posterSizes.size, imagesEntity.posterSize.size)
     }
 
     @Test

@@ -1,14 +1,14 @@
 package com.jokot.app.moviecatalogue.data
 
 import androidx.lifecycle.LiveData
-import com.jokot.app.moviecatalogue.data.source.local.entity.ImagesEntity
+import com.jokot.app.moviecatalogue.data.source.local.entity.ImageEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.MovieEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.TvShowEntity
 import com.jokot.app.moviecatalogue.vo.Resource
 
 interface FilmDataSource {
 
-    fun getConfiguration(): LiveData<ImagesEntity>
+    fun getConfiguration(): LiveData<Resource<ImageEntity>>
 
     fun getMovieDetail(movieId: Int): LiveData<Resource<MovieEntity>>
 

@@ -11,13 +11,13 @@ import com.jokot.app.moviecatalogue.utils.convertRunTimeToDuration
 class FakeFilmRepository(private val remoteDataSource: RemoteDataSource) :
     FilmDataSource {
 
-    override fun getConfiguration(): LiveData<ImagesEntity> {
-        val imagesResult = MutableLiveData<ImagesEntity>()
+    override fun getConfiguration(): LiveData<ImageEntity> {
+        val imagesResult = MutableLiveData<ImageEntity>()
 
         remoteDataSource.getConfiguration(object : RemoteDataSource.LoadConfigurationCallback {
             override fun onImagesConfigurationReceived(imagesConfig: ImagesResponse) {
                 imagesConfig.let {
-                    val images = ImagesEntity(
+                    val images = ImageEntity(
                         it.backdropSizes,
                         it.baseUrl,
                         it.posterSizes,

@@ -2,12 +2,16 @@ package com.jokot.app.moviecatalogue.data.source.local.room
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.jokot.app.moviecatalogue.data.source.local.entity.ImageEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.MovieEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.TvShowEntity
 
 
 @Dao
 interface FilmDao {
+
+    @Query("SELECT * FROM image_entities WHERE imageId = 0")
+    fun getImage(): LiveData<ImageEntity>
 
     @Query("SELECT * FROM movie_entities WHERE movieId = :movieId")
     fun getMovieById(movieId: Int): LiveData<MovieEntity>
@@ -44,6 +48,9 @@ interface FilmDao {
 
     @Query("SELECT * FROM tv_show_entities WHERE favorite = 1")
     fun getFavoriteTvShow(): LiveData<List<TvShowEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertImage(image: ImageEntity)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertMovies(movies: List<MovieEntity>)

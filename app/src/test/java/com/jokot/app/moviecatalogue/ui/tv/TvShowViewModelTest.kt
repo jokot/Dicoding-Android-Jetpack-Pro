@@ -4,7 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.jokot.app.moviecatalogue.data.FilmRepository
-import com.jokot.app.moviecatalogue.data.source.local.entity.ImagesEntity
+import com.jokot.app.moviecatalogue.data.source.local.entity.ImageEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.TvShowEntity
 import com.jokot.app.moviecatalogue.utils.DataDummy
 import com.jokot.app.moviecatalogue.utils.Event
@@ -35,7 +35,7 @@ class TvShowViewModelTest {
     private lateinit var observerTvShows: Observer<List<TvShowEntity>>
 
     @Mock
-    private lateinit var observerImages: Observer<ImagesEntity>
+    private lateinit var observerImage: Observer<ImageEntity>
 
     @Before
     fun setup() {
@@ -44,17 +44,17 @@ class TvShowViewModelTest {
 
     @Test
     fun getConfiguration() {
-        val images = MutableLiveData<ImagesEntity>()
+        val images = MutableLiveData<ImageEntity>()
         images.value = dummyConfig
 
         `when`(filmRepository.getConfiguration()).thenReturn(images)
         val imageEntity = viewModel.getConfiguration().value
         verify(filmRepository).getConfiguration()
         assertNotNull(imageEntity)
-        assertEquals(dummyConfig.posterSizes.size, imageEntity?.posterSizes?.size)
+        assertEquals(dummyConfig.posterSize.size, imageEntity?.posterSize?.size)
 
-        viewModel.getConfiguration().observeForever(observerImages)
-        verify(observerImages).onChanged(dummyConfig)
+        viewModel.getConfiguration().observeForever(observerImage)
+        verify(observerImage).onChanged(dummyConfig)
     }
 
     @Test

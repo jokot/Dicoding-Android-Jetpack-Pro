@@ -31,4 +31,6 @@ data class MovieResponse(
     val voteAverage: Double,
     @SerializedName("vote_count")
     val voteCount: Int
-)
+){
+    var image: ImagesResponse? = null
+}

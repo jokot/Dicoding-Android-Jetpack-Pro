@@ -3,12 +3,11 @@ package com.jokot.app.moviecatalogue.data
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.jokot.app.moviecatalogue.data.source.local.LocalDataSource
-import com.jokot.app.moviecatalogue.data.source.local.entity.ImagesEntity
+import com.jokot.app.moviecatalogue.data.source.local.entity.ImageEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.MovieEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.TvShowEntity
 import com.jokot.app.moviecatalogue.data.source.remote.ApiResponse
 import com.jokot.app.moviecatalogue.data.source.remote.RemoteDataSource
-import com.jokot.app.moviecatalogue.data.source.remote.RemoteDataSource.LoadConfigurationCallback
 import com.jokot.app.moviecatalogue.data.source.remote.response.*
 import com.jokot.app.moviecatalogue.utils.AppExecutors
 import com.jokot.app.moviecatalogue.utils.convertDateFormat
@@ -36,26 +35,28 @@ class FilmRepository private constructor(
             }
     }
 
-    override fun getConfiguration(): LiveData<ImagesEntity> {
-        val imagesResult = MutableLiveData<ImagesEntity>()
+    override fun getConfiguration(): LiveData<Resource<ImageEntity>> {
+        return object : NetworkBoundResource<ImageEntity, ImagesResponse>(appExecutors) {
+            override fun loadFromDB(): LiveData<ImageEntity> =
+                localDataSource.getImage()
 
-        remoteDataSource.getConfiguration(object : LoadConfigurationCallback {
-            override fun onImagesConfigurationReceived(imagesConfig: ImagesResponse) {
-                imagesConfig.let {
-                    val images = ImagesEntity(
-                        it.backdropSizes,
-                        it.baseUrl,
-                        it.posterSizes,
-                        it.profileSizes,
-                        it.secureBaseUrl
-                    )
-                    imagesResult.postValue(images)
-                }
+            override fun shouldFetch(data: ImageEntity?): Boolean =
+                data == null
+
+            override fun createCall(): LiveData<ApiResponse<ImagesResponse>> =
+                remoteDataSource.getConfiguration()
+
+            override fun saveCallResult(data: ImagesResponse) {
+                val images = ImageEntity(
+                    data.backdropSizes[1],
+                    data.posterSizes[0],
+                    data.secureBaseUrl
+                )
+
+                localDataSource.insertImage(images)
             }
 
-        })
-
-        return imagesResult
+        }.asLiveData()
     }
 
     override fun getMovieDetail(movieId: Int): LiveData<Resource<MovieEntity>> {

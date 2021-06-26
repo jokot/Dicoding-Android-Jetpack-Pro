@@ -28,8 +28,9 @@ class RemoteDataSource private constructor(
             }
     }
 
-    fun getConfiguration(callback: LoadConfigurationCallback) {
+    fun getConfiguration(): LiveData<ApiResponse<ImagesResponse>> {
         EspressoIdlingResources.increment()
+        val resultImage = MutableLiveData<ApiResponse<ImagesResponse>>()
         apiService.getConfiguration(apiKey).enqueue(object : Callback<ConfigurationResponse> {
             override fun onResponse(
                 call: Call<ConfigurationResponse>,
@@ -37,7 +38,7 @@ class RemoteDataSource private constructor(
             ) {
                 if (response.isSuccessful) {
                     response.body()?.images?.let {
-                        callback.onImagesConfigurationReceived(it)
+                        resultImage.value = ApiResponse.success(it)
                     }
                 } else {
                     Log.e(TAG, "onFailure: ${response.message()}")
@@ -51,6 +52,7 @@ class RemoteDataSource private constructor(
             }
 
         })
+        return resultImage
     }
 
     fun getMovieDetail(movieId: Int): LiveData<ApiResponse<MovieDetailResponse>> {

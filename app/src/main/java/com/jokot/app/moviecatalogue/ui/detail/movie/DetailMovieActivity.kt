@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.jokot.app.moviecatalogue.R
-import com.jokot.app.moviecatalogue.data.source.local.entity.ImagesEntity
+import com.jokot.app.moviecatalogue.data.source.local.entity.ImageEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.MovieEntity
 import com.jokot.app.moviecatalogue.databinding.ActivityDetailMovieBinding
 import com.jokot.app.moviecatalogue.databinding.ContentDetailMovieBinding
@@ -49,40 +49,61 @@ class DetailMovieActivity : AppCompatActivity() {
             if (movieId != 0) {
                 viewModel.setSelectedMovie(movieId)
 
-                activityDetailMovieBinding.progressBar.visibility = View.VISIBLE
-                contentDetailMovieBinding.root.visibility = View.GONE
-                viewModel.getConfiguration().observe(this, { images ->
-                    viewModel.movieDetail.observe(this, { movieDetailResource ->
-                        if (movieDetailResource != null) {
-                            when (movieDetailResource.status) {
-                                Status.LOADING -> {
-                                    activityDetailMovieBinding.progressBar.visibility = View.VISIBLE
-                                    contentDetailMovieBinding.root.visibility = View.GONE
-                                }
-                                Status.SUCCESS -> {
-                                    activityDetailMovieBinding.progressBar.visibility = View.GONE
-                                    contentDetailMovieBinding.root.visibility = View.VISIBLE
-                                    movieDetailResource.data?.let { populateMovie(it, images) }
-                                }
-                                Status.ERROR -> {
-                                    activityDetailMovieBinding.progressBar.visibility = View.GONE
-                                    contentDetailMovieBinding.root.visibility = View.VISIBLE
-                                    Toast.makeText(
-                                        applicationContext,
-                                        "Terjadi kesalahan",
-                                        Toast.LENGTH_SHORT
-                                    )
-                                        .show()
-                                }
-                            }
-                        }
-                    })
-                })
+                observeGetConfig()
             }
         }
     }
 
-    private fun populateMovie(movie: MovieEntity, images: ImagesEntity) {
+    private fun observeGetConfig() {
+        viewModel.getConfiguration().observe(this, { imageResource ->
+            if (imageResource != null) {
+                when (imageResource.status) {
+                    Status.LOADING -> {
+                        activityDetailMovieBinding.progressBar.visibility = View.VISIBLE
+                        contentDetailMovieBinding.root.visibility = View.GONE
+                    }
+                    Status.SUCCESS -> {
+                        activityDetailMovieBinding.progressBar.visibility = View.GONE
+                        contentDetailMovieBinding.root.visibility = View.VISIBLE
+                        imageResource.data?.let { observeGetMovieDetail(it) }
+                    }
+                    Status.ERROR -> {
+                        activityDetailMovieBinding.progressBar.visibility = View.GONE
+                        contentDetailMovieBinding.root.visibility = View.VISIBLE
+                        Toast.makeText(
+                            applicationContext, "Terjadi kesalahan", Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
+        })
+    }
+
+    private fun observeGetMovieDetail(image: ImageEntity) {
+        viewModel.movieDetail.observe(this, { movieDetailResource ->
+            if (movieDetailResource != null) {
+                when (movieDetailResource.status) {
+                    Status.LOADING -> {
+                        activityDetailMovieBinding.progressBar.visibility = View.VISIBLE
+                        contentDetailMovieBinding.root.visibility = View.GONE
+                    }
+                    Status.SUCCESS -> {
+                        activityDetailMovieBinding.progressBar.visibility = View.GONE
+                        contentDetailMovieBinding.root.visibility = View.VISIBLE
+                        movieDetailResource.data?.let { populateMovie(it, image) }
+                    }
+                    Status.ERROR -> {
+                        activityDetailMovieBinding.progressBar.visibility = View.GONE
+                        contentDetailMovieBinding.root.visibility = View.VISIBLE
+                        Toast.makeText(applicationContext, "Terjadi kesalahan", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+            }
+        })
+    }
+
+    private fun populateMovie(movie: MovieEntity, image: ImageEntity) {
         with(contentDetailMovieBinding) {
             textTitle.text = movie.title
             textDate.text = movie.releaseDate
@@ -92,7 +113,7 @@ class DetailMovieActivity : AppCompatActivity() {
             textScore.text = StringBuilder("${movie.score}%")
             textOverview.text = movie.overview
 
-            val posterPath = images.secureBaseUrl + images.posterSizes[1] + movie.posterPath
+            val posterPath = image.secureBaseUrl + image.posterSize + movie.posterPath
             Glide.with(this@DetailMovieActivity)
                 .load(posterPath)
                 .apply(
@@ -101,7 +122,7 @@ class DetailMovieActivity : AppCompatActivity() {
                 )
                 .into(imgPoster)
 
-            val backdropPath = images.secureBaseUrl + images.backdropSizes[1] + movie.bannerPath
+            val backdropPath = image.secureBaseUrl + image.backdropSize + movie.bannerPath
             Glide.with(this@DetailMovieActivity)
                 .load(backdropPath)
                 .apply(

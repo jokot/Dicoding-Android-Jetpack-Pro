@@ -5,12 +5,12 @@ import com.jokot.app.moviecatalogue.data.source.remote.response.*
 
 object DataDummy {
 
-    fun generateDummyConfig(): ImagesEntity {
-        return ImagesEntity(
-            listOf("w300", "w780", "w1280", "original"),
-            "http://image.tmdb.org/t/p/",
-            listOf("w92", "w154", "w185", "w342", "w500", "w780", "original"),
-            listOf("w45", "w185", "h632", "original"),
+    fun generateDummyConfig(): ImageEntity {
+        return ImageEntity(
+            listOf("w300", "w780", "w1280", "original")[1],
+//            "http://image.tmdb.org/t/p/",
+            listOf("w92", "w154", "w185", "w342", "w500", "w780", "original")[0],
+//            listOf("w45", "w185", "h632", "original"),
             "https://image.tmdb.org/t/p/"
         )
     }

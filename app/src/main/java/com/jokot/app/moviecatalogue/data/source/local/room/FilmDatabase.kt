@@ -4,12 +4,13 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.jokot.app.moviecatalogue.data.source.local.entity.ImageEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.MovieEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.TvShowEntity
 
 
 @Database(
-    entities = [MovieEntity::class, TvShowEntity::class],
+    entities = [MovieEntity::class, TvShowEntity::class, ImageEntity::class],
     version = 1,
     exportSchema = false
 )
