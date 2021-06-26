@@ -64,7 +64,7 @@ class FilmRepository private constructor(
                 localDataSource.getMovieWithDetail(movieId)
 
             override fun shouldFetch(data: MovieEntity?): Boolean =
-                data == null
+                data?.movieDetailEntity == null
 
 
             override fun createCall(): LiveData<ApiResponse<MovieDetailResponse>> =
@@ -77,11 +77,13 @@ class FilmRepository private constructor(
                     genres.add(genre.name)
                 }
 
-                localDataSource.updateMovieDetail(
-                    convertRunTimeToDuration(movieDetailResponse.runtime),
-                    genres.joinToString(),
-                    movieId
-                )
+                appExecutors.diskIO().execute {
+                    localDataSource.updateMovieDetail(
+                        convertRunTimeToDuration(movieDetailResponse.runtime),
+                        genres.joinToString(),
+                        movieId
+                    )
+                }
             }
 
         }.asLiveData()
@@ -93,7 +95,7 @@ class FilmRepository private constructor(
                 localDataSource.getTvShowWithDetail(tvShowId)
 
             override fun shouldFetch(data: TvShowEntity?): Boolean =
-                data == null
+                data?.tvShowDetailEntity == null
 
             override fun createCall(): LiveData<ApiResponse<TvShowDetailResponse>> =
                 remoteDataSource.getTvShowDetail(tvShowId)
@@ -105,11 +107,15 @@ class FilmRepository private constructor(
                     genres.add(genre.name)
                 }
 
-                localDataSource.updateTvShowDetail(
-                    convertRunTimeToDuration(tvShowDetailResponse.episodeRunTime.average().toInt()),
-                    genres.joinToString(),
-                    tvShowId
-                )
+                appExecutors.diskIO().execute {
+                    localDataSource.updateTvShowDetail(
+                        convertRunTimeToDuration(
+                            tvShowDetailResponse.episodeRunTime.average().toInt()
+                        ),
+                        genres.joinToString(),
+                        tvShowId
+                    )
+                }
             }
 
         }.asLiveData()
@@ -128,6 +134,7 @@ class FilmRepository private constructor(
 
             override fun saveCallResult(data: List<MovieResponse>) {
                 val movieList = ArrayList<MovieEntity>()
+                val movieIds = ArrayList<Int>()
                 for (response in data) {
                     val movie = MovieEntity(
                         response.id,
@@ -140,8 +147,11 @@ class FilmRepository private constructor(
                         isNowPlaying = true
                     )
                     movieList.add(movie)
+                    movieIds.add(movie.movieId)
                 }
-                appExecutors.diskIO().execute { localDataSource.insertOrUpdateNowPlayingMovie(movieList)}
+
+                localDataSource.insertOrUpdateNowPlayingMovie(movieList, movieIds)
+
             }
 
         }.asLiveData()
@@ -160,6 +170,7 @@ class FilmRepository private constructor(
 
             override fun saveCallResult(data: List<MovieResponse>) {
                 val movieList = ArrayList<MovieEntity>()
+                val movieIds = ArrayList<Int>()
                 for (response in data) {
                     val movie = MovieEntity(
                         response.id,
@@ -172,9 +183,10 @@ class FilmRepository private constructor(
                         isPopular = true
                     )
                     movieList.add(movie)
+                    movieIds.add(movie.movieId)
                 }
+                localDataSource.insertOrUpdatePopularMovie(movieList, movieIds)
 
-                appExecutors.diskIO().execute { localDataSource.insertOrUpdatePopularMovie(movieList) }
             }
 
         }.asLiveData()
@@ -193,6 +205,7 @@ class FilmRepository private constructor(
 
             override fun saveCallResult(data: List<MovieResponse>) {
                 val movieList = ArrayList<MovieEntity>()
+                val movieIds = ArrayList<Int>()
                 for (response in data) {
                     val movie = MovieEntity(
                         response.id,
@@ -205,9 +218,9 @@ class FilmRepository private constructor(
                         isTopRated = true
                     )
                     movieList.add(movie)
+                    movieIds.add(movie.movieId)
                 }
-
-                appExecutors.diskIO().execute { localDataSource.insertOrUpdateTopRatedMovie(movieList)}
+                localDataSource.insertOrUpdateTopRatedMovie(movieList, movieIds)
             }
 
         }.asLiveData()
@@ -226,6 +239,7 @@ class FilmRepository private constructor(
 
             override fun saveCallResult(data: List<MovieResponse>) {
                 val movieList = ArrayList<MovieEntity>()
+                val movieIds = ArrayList<Int>()
                 for (response in data) {
                     val movie = MovieEntity(
                         response.id,
@@ -238,9 +252,10 @@ class FilmRepository private constructor(
                         isUpcoming = true
                     )
                     movieList.add(movie)
+                    movieIds.add(movie.movieId)
                 }
 
-                appExecutors.diskIO().execute { localDataSource.insertOrUpdateUpcomingMovie(movieList) }
+                localDataSource.insertOrUpdateUpcomingMovie(movieList, movieIds)
             }
 
         }.asLiveData()

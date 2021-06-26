@@ -20,9 +20,6 @@ class MovieFragment : Fragment() {
     private var _fragmentMovieBinding: FragmentMovieBinding? = null
     private val binding get() = _fragmentMovieBinding
 
-    private lateinit var movieAdapter: MovieAdapter
-
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -38,59 +35,66 @@ class MovieFragment : Fragment() {
             val factory = ViewModelFactory.getInstance(requireActivity())
             val viewModel = ViewModelProvider(this, factory)[MovieViewModel::class.java]
 
-            movieAdapter = MovieAdapter()
-
             binding?.progressBar?.visibility = View.VISIBLE
+            binding?.rvMovie?.visibility = View.GONE
             viewModel.getConfiguration().observe(viewLifecycleOwner, { images ->
                 viewModel.getInitData().getContentIfNotHandled()?.let { it ->
                     it.observe(viewLifecycleOwner, { movies ->
-                        movies?.let { setupOnStatus(movies, images) }
+                        movies?.let { setupUiOnStatus(movies, images) }
                     })
                 }
             })
 
             binding?.chipGroup?.setOnCheckedChangeListener { _, checkedId ->
                 binding?.progressBar?.visibility = View.VISIBLE
+                binding?.rvMovie?.visibility = View.GONE
                 viewModel.getConfiguration().observe(viewLifecycleOwner, { images ->
                     when (checkedId) {
                         binding?.chip1?.id -> {
                             viewModel.getNowPlayingMovies().observe(viewLifecycleOwner, { movies ->
-                                movies?.let { setupOnStatus(movies, images) }
+                                movies?.let { setupUiOnStatus(movies, images) }
                             })
                         }
                         binding?.chip2?.id -> {
                             viewModel.getPopularMovies().observe(viewLifecycleOwner, { movies ->
-                                movies?.let { setupOnStatus(movies, images) }
+                                movies?.let { setupUiOnStatus(movies, images) }
                             })
                         }
                         binding?.chip3?.id -> {
                             viewModel.getTopRatedMovies().observe(viewLifecycleOwner, { movies ->
-                                movies?.let { setupOnStatus(movies, images) }
+                                movies?.let { setupUiOnStatus(movies, images) }
                             })
                         }
                         binding?.chip4?.id -> {
                             viewModel.getUpcomingMovies().observe(viewLifecycleOwner, { movies ->
-                                movies?.let { setupOnStatus(movies, images) }
+                                movies?.let { setupUiOnStatus(movies, images) }
                             })
                         }
 
                     }
                 })
             }
-
-            with(binding?.rvMovie) {
-                this?.layoutManager = LinearLayoutManager(context)
-                this?.setHasFixedSize(true)
-                this?.adapter = movieAdapter
-            }
         }
     }
 
-    private fun setupOnStatus(movies: Resource<List<MovieEntity>>, images: ImagesEntity) {
+    private fun setupUiOnStatus(movies: Resource<List<MovieEntity>>, images: ImagesEntity) {
         when (movies.status) {
-            Status.LOADING -> binding?.progressBar?.visibility = View.VISIBLE
+            Status.LOADING -> {
+                binding?.progressBar?.visibility = View.VISIBLE
+                binding?.rvMovie?.visibility = View.GONE
+            }
             Status.SUCCESS -> {
                 binding?.progressBar?.visibility = View.GONE
+                binding?.rvMovie?.visibility = View.VISIBLE
+
+                val movieAdapter = MovieAdapter()
+
+                with(binding?.rvMovie) {
+                    this?.layoutManager = LinearLayoutManager(context)
+                    this?.setHasFixedSize(true)
+                    this?.adapter = movieAdapter
+                }
+
                 movieAdapter.setMovies(movies.data, images)
                 movieAdapter.notifyDataSetChanged()
             }

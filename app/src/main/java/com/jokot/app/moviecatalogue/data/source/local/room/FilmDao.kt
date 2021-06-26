@@ -51,11 +51,32 @@ interface FilmDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertTvShows(tvSows: List<TvShowEntity>)
 
-    @Update
-    fun updateMovie(movie: MovieEntity)
+    @Transaction
+    fun insertOrUpdateNowPlayingMovie(movies: List<MovieEntity>, movieIds: List<Int>){
+        insertMovies(movies)
+        updateMovieIsNowPlaying(movieIds)
+    }
+
+    @Transaction
+    fun insertOrUpdatePopularMovie(movies: List<MovieEntity>, movieIds: List<Int>){
+        insertMovies(movies)
+        updateMovieIsPopular(movieIds)
+    }
+
+    @Transaction
+    fun insertOrUpdateTopRatedMovie(movies: List<MovieEntity>, movieIds: List<Int>){
+        insertMovies(movies)
+        updateMovieIsTopRated(movieIds)
+    }
+
+    @Transaction
+    fun insertOrUpdateUpcomingMovie(movies: List<MovieEntity>, movieIds: List<Int>){
+        insertMovies(movies)
+        updateMovieIsUpcoming(movieIds)
+    }
 
     @Update
-    fun updateMovies(movies: List<MovieEntity>)
+    fun updateMovie(movie: MovieEntity)
 
     @Update
     fun updateTvShow(tvShow: TvShowEntity)
@@ -66,4 +87,15 @@ interface FilmDao {
     @Query("UPDATE tv_show_entities SET episodeRunTime = :duration, genres = :genres WHERE tvShowId = :tvShowId")
     fun updateTvShowByDetail(duration: String, genres: String, tvShowId: Int)
 
+    @Query("UPDATE movie_entities SET isNowPlaying = 1 WHERE movieId IN(:movieIds)")
+    fun updateMovieIsNowPlaying(movieIds: List<Int>)
+
+    @Query("UPDATE movie_entities SET isPopular = 1 WHERE movieId IN(:movieIds)")
+    fun updateMovieIsPopular(movieIds: List<Int>)
+
+    @Query("UPDATE movie_entities SET isTopRated = 1 WHERE movieId IN(:movieIds)")
+    fun updateMovieIsTopRated(movieIds: List<Int>)
+
+    @Query("UPDATE movie_entities SET isUpcoming = 1 WHERE movieId IN(:movieIds)")
+    fun updateMovieIsUpcoming(movieIds: List<Int>)
 }
