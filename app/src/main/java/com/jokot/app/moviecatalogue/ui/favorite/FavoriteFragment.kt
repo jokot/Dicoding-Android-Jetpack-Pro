@@ -32,8 +32,8 @@ class FavoriteFragment : Fragment() {
             addFragment(FavoriteMovieFragment())
             binding?.chipGroup?.setOnCheckedChangeListener { _, checkedId ->
                 when (checkedId) {
-                    binding?.chip1?.id -> changeFragment(FavoriteMovieFragment())
-                    binding?.chip2?.id -> changeFragment(FavoriteTvShowFragment())
+                    binding?.chipFavMovie?.id -> changeFragment(FavoriteMovieFragment())
+                    binding?.chipFavTvShow?.id -> changeFragment(FavoriteTvShowFragment())
                 }
             }
         }

@@ -42,7 +42,7 @@ class FavoriteTvShowFragment : Fragment() {
             tvShowAdapter = TvShowAdapter()
             observeGetConfig()
 
-            with(binding?.rvBookmark) {
+            with(binding?.rvFavorite) {
                 this?.layoutManager = LinearLayoutManager(context)
                 this?.setHasFixedSize(true)
                 this?.adapter = tvShowAdapter

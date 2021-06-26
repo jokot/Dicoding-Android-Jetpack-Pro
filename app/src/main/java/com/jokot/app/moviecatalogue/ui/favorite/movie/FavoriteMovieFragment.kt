@@ -44,7 +44,7 @@ class FavoriteMovieFragment : Fragment() {
 
             observeGetConfig()
 
-            with(binding?.rvBookmark) {
+            with(binding?.rvFavorite) {
                 this?.layoutManager = LinearLayoutManager(context)
                 this?.setHasFixedSize(true)
                 this?.adapter = movieAdapter
