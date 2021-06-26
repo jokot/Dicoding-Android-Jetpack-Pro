@@ -12,9 +12,6 @@ class TvShowViewModel(private val filmRepository: FilmRepository) : ViewModel() 
 
     fun getConfiguration(): LiveData<ImagesEntity> = filmRepository.getConfiguration()
 
-    fun getInitData(): Event<LiveData<Resource<List<TvShowEntity>>>> =
-        Event(filmRepository.getOnTheAirTvShows())
-
     fun getOnTheAirTvShow(): LiveData<Resource<List<TvShowEntity>>> =
         filmRepository.getOnTheAirTvShows()
 
