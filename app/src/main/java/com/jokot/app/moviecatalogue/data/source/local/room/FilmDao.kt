@@ -75,6 +75,30 @@ interface FilmDao {
         updateMovieIsUpcoming(movieIds)
     }
 
+    @Transaction
+    fun insertOrUpdateOnTheAirTvShow(tvShows: List<TvShowEntity>, tvShowIds: List<Int>){
+        insertTvShows(tvShows)
+        updateTvShowIsOnTheAir(tvShowIds)
+    }
+
+    @Transaction
+    fun insertOrUpdatePopularTvShow(tvShows: List<TvShowEntity>, tvShowIds: List<Int>){
+        insertTvShows(tvShows)
+        updateTvShowIsPopular(tvShowIds)
+    }
+
+    @Transaction
+    fun insertOrUpdateTopRatedTvShow(tvShows: List<TvShowEntity>, tvShowIds: List<Int>){
+        insertTvShows(tvShows)
+        updateTvShowIsTopRated(tvShowIds)
+    }
+
+    @Transaction
+    fun insertOrUpdateAiringTodayTvShow(tvShows: List<TvShowEntity>, tvShowIds: List<Int>){
+        insertTvShows(tvShows)
+        updateTvShowIsAiringToday(tvShowIds)
+    }
+
     @Update
     fun updateMovie(movie: MovieEntity)
 
@@ -98,4 +122,16 @@ interface FilmDao {
 
     @Query("UPDATE movie_entities SET isUpcoming = 1 WHERE movieId IN(:movieIds)")
     fun updateMovieIsUpcoming(movieIds: List<Int>)
+
+    @Query("UPDATE tv_show_entities SET isOnAir = 1 WHERE tvShowId IN(:tvShowIds)")
+    fun updateTvShowIsOnTheAir(tvShowIds: List<Int>)
+
+    @Query("UPDATE tv_show_entities SET isPopular = 1 WHERE tvShowId IN(:tvShowIds)")
+    fun updateTvShowIsPopular(tvShowIds: List<Int>)
+
+    @Query("UPDATE tv_show_entities SET isTopRated = 1 WHERE tvShowId IN(:tvShowIds)")
+    fun updateTvShowIsTopRated(tvShowIds: List<Int>)
+
+    @Query("UPDATE tv_show_entities SET isAiringToday = 1 WHERE tvShowId IN(:tvShowIds)")
+    fun updateTvShowIsAiringToday(tvShowIds: List<Int>)
 }

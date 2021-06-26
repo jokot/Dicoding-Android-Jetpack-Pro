@@ -151,7 +151,6 @@ class FilmRepository private constructor(
                 }
 
                 localDataSource.insertOrUpdateNowPlayingMovie(movieList, movieIds)
-
             }
 
         }.asLiveData()
@@ -275,6 +274,7 @@ class FilmRepository private constructor(
 
             override fun saveCallResult(data: List<TvShowResponse>) {
                 val tvShowList = ArrayList<TvShowEntity>()
+                val tvShowIds = ArrayList<Int>()
                 for (response in data) {
                     val tvShow = TvShowEntity(
                         response.id,
@@ -287,9 +287,10 @@ class FilmRepository private constructor(
                         isOnAir = true
                     )
                     tvShowList.add(tvShow)
+                    tvShowIds.add(tvShow.id)
                 }
 
-                localDataSource.insertTvShow(tvShowList)
+                localDataSource.insertOrUpdateOnTheAirTvShow(tvShowList, tvShowIds)
             }
         }.asLiveData()
     }
@@ -308,6 +309,7 @@ class FilmRepository private constructor(
 
             override fun saveCallResult(data: List<TvShowResponse>) {
                 val tvShowList = ArrayList<TvShowEntity>()
+                val tvShowIds = ArrayList<Int>()
                 for (response in data) {
                     val tvShow = TvShowEntity(
                         response.id,
@@ -320,9 +322,10 @@ class FilmRepository private constructor(
                         isPopular = true
                     )
                     tvShowList.add(tvShow)
+                    tvShowIds.add(tvShow.id)
                 }
 
-                localDataSource.insertTvShow(tvShowList)
+                localDataSource.insertOrUpdatePopularTvShow(tvShowList, tvShowIds)
             }
         }.asLiveData()
     }
@@ -341,6 +344,7 @@ class FilmRepository private constructor(
 
             override fun saveCallResult(data: List<TvShowResponse>) {
                 val tvShowList = ArrayList<TvShowEntity>()
+                val tvShowIds = ArrayList<Int>()
                 for (response in data) {
                     val tvShow = TvShowEntity(
                         response.id,
@@ -353,9 +357,10 @@ class FilmRepository private constructor(
                         isTopRated = true
                     )
                     tvShowList.add(tvShow)
+                    tvShowIds.add(tvShow.id)
                 }
 
-                localDataSource.insertTvShow(tvShowList)
+                localDataSource.insertOrUpdateTopRatedTvShow(tvShowList, tvShowIds)
             }
         }.asLiveData()
     }
@@ -374,6 +379,7 @@ class FilmRepository private constructor(
 
             override fun saveCallResult(data: List<TvShowResponse>) {
                 val tvShowList = ArrayList<TvShowEntity>()
+                val tvShowIds = ArrayList<Int>()
                 for (response in data) {
                     val tvShow = TvShowEntity(
                         response.id,
@@ -386,9 +392,10 @@ class FilmRepository private constructor(
                         isAiringToday = true
                     )
                     tvShowList.add(tvShow)
+                    tvShowIds.add(tvShow.id)
                 }
 
-                localDataSource.insertTvShow(tvShowList)
+                localDataSource.insertOrUpdateAiringTodayTvShow(tvShowList, tvShowIds)
             }
         }.asLiveData()
     }

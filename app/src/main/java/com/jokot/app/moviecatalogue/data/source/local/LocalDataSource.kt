@@ -47,6 +47,18 @@ class LocalDataSource private constructor(private val mFilmDao: FilmDao) {
     fun insertOrUpdateUpcomingMovie(movies: List<MovieEntity>, movieIds: List<Int>) =
         mFilmDao.insertOrUpdateUpcomingMovie(movies, movieIds)
 
+    fun insertOrUpdateOnTheAirTvShow(tvShows: List<TvShowEntity>, tvShowIds: List<Int>) =
+        mFilmDao.insertOrUpdateOnTheAirTvShow(tvShows, tvShowIds)
+
+    fun insertOrUpdatePopularTvShow(tvShows: List<TvShowEntity>, tvShowIds: List<Int>) =
+        mFilmDao.insertOrUpdatePopularTvShow(tvShows, tvShowIds)
+
+    fun insertOrUpdateTopRatedTvShow(tvShows: List<TvShowEntity>, tvShowIds: List<Int>) =
+        mFilmDao.insertOrUpdateTopRatedTvShow(tvShows, tvShowIds)
+
+    fun insertOrUpdateAiringTodayTvShow(tvShows: List<TvShowEntity>, tvShowIds: List<Int>) =
+        mFilmDao.insertOrUpdateAiringTodayTvShow(tvShows, tvShowIds)
+
     fun insertTvShow(tvShows: List<TvShowEntity>) = mFilmDao.insertTvShows(tvShows)
 
     fun getBookmarkedMovie(): LiveData<List<MovieEntity>> = mFilmDao.getBookmarkedMovie()

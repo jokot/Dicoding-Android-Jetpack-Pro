@@ -19,7 +19,8 @@ class TvShowFragment : Fragment() {
 
     private var _fragmentTvShowBinding: FragmentTvShowBinding? = null
     private val binding get() = _fragmentTvShowBinding
-    private lateinit var tvShowAdapter: TvShowAdapter
+
+    private var tvShowAdapter: TvShowAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,6 +40,7 @@ class TvShowFragment : Fragment() {
             tvShowAdapter = TvShowAdapter()
 
             binding?.progressBar?.visibility = View.VISIBLE
+            binding?.rvTvShow?.visibility = View.GONE
             viewModel.getConfiguration().observe(viewLifecycleOwner, { images ->
                 viewModel.getInitData().getContentIfNotHandled()?.let {
                     it.observe(viewLifecycleOwner, { tvShows ->
@@ -49,6 +51,7 @@ class TvShowFragment : Fragment() {
 
             binding?.chipGroup?.setOnCheckedChangeListener { _, checkedId ->
                 binding?.progressBar?.visibility = View.VISIBLE
+                binding?.rvTvShow?.visibility = View.GONE
                 viewModel.getConfiguration().observe(viewLifecycleOwner, { images ->
                     when (checkedId) {
                         binding?.chip1?.id -> {
@@ -78,22 +81,30 @@ class TvShowFragment : Fragment() {
                     }
                 })
             }
-
-            with(binding?.rvTvShow) {
-                this?.layoutManager = LinearLayoutManager(context)
-                this?.setHasFixedSize(true)
-                this?.adapter = tvShowAdapter
-            }
         }
     }
 
     private fun setupUiOnStatus(tvShows: Resource<List<TvShowEntity>>, images: ImagesEntity) {
         when (tvShows.status) {
-            Status.LOADING -> binding?.progressBar?.visibility = View.VISIBLE
+            Status.LOADING -> {
+                tvShowAdapter = null
+                binding?.progressBar?.visibility = View.VISIBLE
+                binding?.rvTvShow?.visibility = View.GONE
+            }
             Status.SUCCESS -> {
                 binding?.progressBar?.visibility = View.GONE
-                tvShowAdapter.setTvShows(tvShows.data, images)
-                tvShowAdapter.notifyDataSetChanged()
+                binding?.rvTvShow?.visibility = View.VISIBLE
+
+                tvShowAdapter = TvShowAdapter()
+
+                with(binding?.rvTvShow) {
+                    this?.layoutManager = LinearLayoutManager(context)
+                    this?.setHasFixedSize(true)
+                    this?.adapter = tvShowAdapter
+                }
+
+                tvShowAdapter?.setTvShows(tvShows.data, images)
+                tvShowAdapter?.notifyDataSetChanged()
             }
             Status.ERROR -> {
                 binding?.progressBar?.visibility = View.GONE
