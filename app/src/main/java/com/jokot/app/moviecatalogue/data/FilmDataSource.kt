@@ -1,6 +1,7 @@
 package com.jokot.app.moviecatalogue.data
 
 import androidx.lifecycle.LiveData
+import androidx.paging.PagedList
 import com.jokot.app.moviecatalogue.data.source.local.entity.ImageEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.MovieEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.TvShowEntity
@@ -14,25 +15,25 @@ interface FilmDataSource {
 
     fun getTvShowDetail(tvShowId: Int): LiveData<Resource<TvShowEntity>>
 
-    fun getNowPlayingMovies(): LiveData<Resource<List<MovieEntity>>>
+    fun getNowPlayingMovies(): LiveData<Resource<PagedList<MovieEntity>>>
 
-    fun getPopularMovies(): LiveData<Resource<List<MovieEntity>>>
+    fun getPopularMovies(): LiveData<Resource<PagedList<MovieEntity>>>
 
-    fun getTopRatedMovies(): LiveData<Resource<List<MovieEntity>>>
+    fun getTopRatedMovies(): LiveData<Resource<PagedList<MovieEntity>>>
 
-    fun getUpcomingMovies(): LiveData<Resource<List<MovieEntity>>>
+    fun getUpcomingMovies(): LiveData<Resource<PagedList<MovieEntity>>>
 
-    fun getOnTheAirTvShows(): LiveData<Resource<List<TvShowEntity>>>
+    fun getOnTheAirTvShows(): LiveData<Resource<PagedList<TvShowEntity>>>
 
-    fun getPopularTvShows(): LiveData<Resource<List<TvShowEntity>>>
+    fun getPopularTvShows(): LiveData<Resource<PagedList<TvShowEntity>>>
 
-    fun getTopRatedTvShows(): LiveData<Resource<List<TvShowEntity>>>
+    fun getTopRatedTvShows(): LiveData<Resource<PagedList<TvShowEntity>>>
 
-    fun getAiringTodayTvShows(): LiveData<Resource<List<TvShowEntity>>>
+    fun getAiringTodayTvShows(): LiveData<Resource<PagedList<TvShowEntity>>>
 
-    fun getFavoriteMovie(): LiveData<List<MovieEntity>>
+    fun getFavoriteMovie(): LiveData<PagedList<MovieEntity>>
 
-    fun getFavoriteTvShow(): LiveData<List<TvShowEntity>>
+    fun getFavoriteTvShow(): LiveData<PagedList<TvShowEntity>>
 
     fun setMovieFavorite(movie: MovieEntity, state: Boolean)
 

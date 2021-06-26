@@ -56,7 +56,6 @@ class NowPlayingMovieFragment : Fragment() {
                 when(imageResource.status){
                     Status.LOADING ->{
                         binding?.progressBar?.visibility = View.VISIBLE
-                        binding?.rvMovie?.visibility = View.GONE
                     }
                     Status.SUCCESS ->{
                         imageResource.data?.let { observeGetMovie(it) }
@@ -75,12 +74,11 @@ class NowPlayingMovieFragment : Fragment() {
             when (movies.status) {
                 Status.LOADING -> {
                     binding?.progressBar?.visibility = View.VISIBLE
-                    binding?.rvMovie?.visibility = View.GONE
                 }
                 Status.SUCCESS -> {
                     binding?.progressBar?.visibility = View.GONE
-                    binding?.rvMovie?.visibility = View.VISIBLE
-                    movieAdapter.setMovies(movies.data, image)
+                    movieAdapter.setImage(image)
+                    movieAdapter.submitList(movies.data)
                     movieAdapter.notifyDataSetChanged()
                 }
                 Status.ERROR -> {

@@ -1,4 +1,4 @@
-package com.jokot.app.moviecatalogue.ui.tv
+package com.jokot.app.moviecatalogue.ui.favorite.tvshow
 
 import android.content.Intent
 import android.view.LayoutInflater
@@ -11,14 +11,15 @@ import com.bumptech.glide.request.RequestOptions
 import com.jokot.app.moviecatalogue.R
 import com.jokot.app.moviecatalogue.data.source.local.entity.ImageEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.TvShowEntity
-import com.jokot.app.moviecatalogue.databinding.ItemsTvShowBinding
+import com.jokot.app.moviecatalogue.databinding.ItemsFavoriteTvShowBinding
 import com.jokot.app.moviecatalogue.ui.detail.tv.DetailTvShowActivity
 
-class TvShowAdapter : PagedListAdapter<TvShowEntity,TvShowAdapter.TvShowViewHolder>(DIFF_CALLBACK) {
+class FavoriteTvShowAdapter(private val callback: FavoriteTvShowFragmentCallback) :
+    PagedListAdapter<TvShowEntity, FavoriteTvShowAdapter.FavoriteTvShowViewHolder>(DIFF_CALLBACK) {
     private lateinit var image: ImageEntity
 
     companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<TvShowEntity>(){
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<TvShowEntity>() {
             override fun areItemsTheSame(oldItem: TvShowEntity, newItem: TvShowEntity): Boolean {
                 return oldItem.id == newItem.id
             }
@@ -34,20 +35,22 @@ class TvShowAdapter : PagedListAdapter<TvShowEntity,TvShowAdapter.TvShowViewHold
         this.image = image
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TvShowViewHolder {
-        val itemsTvShowBinding =
-            ItemsTvShowBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return TvShowViewHolder(itemsTvShowBinding)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteTvShowViewHolder {
+        val itemsFavoriteTvShowBinding =
+            ItemsFavoriteTvShowBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return FavoriteTvShowViewHolder(itemsFavoriteTvShowBinding)
     }
 
-    override fun onBindViewHolder(holder: TvShowViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: FavoriteTvShowViewHolder, position: Int) {
         val tvShow = getItem(position)
         if (tvShow != null) {
             holder.bind(tvShow, image)
         }
     }
 
-    class TvShowViewHolder(private val binding: ItemsTvShowBinding) :
+    fun getSwipedData(swipedPosition: Int): TvShowEntity? = getItem(swipedPosition)
+
+    inner class FavoriteTvShowViewHolder(private val binding: ItemsFavoriteTvShowBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(tvShow: TvShowEntity, image: ImageEntity) {
             with(binding) {
@@ -62,6 +65,7 @@ class TvShowAdapter : PagedListAdapter<TvShowEntity,TvShowAdapter.TvShowViewHold
                 }
 
                 val posterPath = image.secureBaseUrl + image.posterSize + tvShow.posterPath
+                imgShare.setOnClickListener { callback.onShareClick(tvShow) }
                 Glide.with(itemView.context)
                     .load(posterPath)
                     .apply(

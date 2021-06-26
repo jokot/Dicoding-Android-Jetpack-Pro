@@ -1,6 +1,7 @@
 package com.jokot.app.moviecatalogue.data.source.local
 
 import androidx.lifecycle.LiveData
+import androidx.paging.DataSource
 import com.jokot.app.moviecatalogue.data.source.local.entity.ImageEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.MovieEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.TvShowEntity
@@ -22,21 +23,21 @@ class LocalDataSource private constructor(private val mFilmDao: FilmDao) {
     fun getTvShowWithDetail(tvShowId: Int): LiveData<TvShowEntity> =
         mFilmDao.getTvShowById(tvShowId)
 
-    fun getNowPlayingMovies(): LiveData<List<MovieEntity>> = mFilmDao.getNowPlayingMovies()
+    fun getNowPlayingMovies(): DataSource.Factory<Int, MovieEntity> = mFilmDao.getNowPlayingMovies()
 
-    fun getPopularMovies(): LiveData<List<MovieEntity>> = mFilmDao.getPopularMovies()
+    fun getPopularMovies(): DataSource.Factory<Int, MovieEntity> = mFilmDao.getPopularMovies()
 
-    fun getTopRatedMovies(): LiveData<List<MovieEntity>> = mFilmDao.getTopRatedMovies()
+    fun getTopRatedMovies(): DataSource.Factory<Int, MovieEntity> = mFilmDao.getTopRatedMovies()
 
-    fun getUpcomingMovies(): LiveData<List<MovieEntity>> = mFilmDao.getUpcomingMovies()
+    fun getUpcomingMovies(): DataSource.Factory<Int, MovieEntity> = mFilmDao.getUpcomingMovies()
 
-    fun getOnTheAirTvShows(): LiveData<List<TvShowEntity>> = mFilmDao.getOnTheAirTvShows()
+    fun getOnTheAirTvShows(): DataSource.Factory<Int, TvShowEntity> = mFilmDao.getOnTheAirTvShows()
 
-    fun getPopularTvShows(): LiveData<List<TvShowEntity>> = mFilmDao.getPopularTvShows()
+    fun getPopularTvShows(): DataSource.Factory<Int, TvShowEntity> = mFilmDao.getPopularTvShows()
 
-    fun getTopRatedTvShows(): LiveData<List<TvShowEntity>> = mFilmDao.getTopRatedTvShows()
+    fun getTopRatedTvShows(): DataSource.Factory<Int, TvShowEntity> = mFilmDao.getTopRatedTvShows()
 
-    fun getAiringTodayTvShows(): LiveData<List<TvShowEntity>> = mFilmDao.getAiringTodayTvShows()
+    fun getAiringTodayTvShows(): DataSource.Factory<Int, TvShowEntity> = mFilmDao.getAiringTodayTvShows()
 
     fun insertImage(image: ImageEntity) =
         mFilmDao.insertImage(image)
@@ -65,9 +66,9 @@ class LocalDataSource private constructor(private val mFilmDao: FilmDao) {
     fun insertOrUpdateAiringTodayTvShow(tvShows: List<TvShowEntity>, tvShowIds: List<Int>) =
         mFilmDao.insertOrUpdateAiringTodayTvShow(tvShows, tvShowIds)
 
-    fun getFavoriteMovie(): LiveData<List<MovieEntity>> = mFilmDao.getFavoriteMovie()
+    fun getFavoriteMovie(): DataSource.Factory<Int, MovieEntity> = mFilmDao.getFavoriteMovie()
 
-    fun getFavoriteTvShow(): LiveData<List<TvShowEntity>> = mFilmDao.getFavoriteTvShow()
+    fun getFavoriteTvShow(): DataSource.Factory<Int, TvShowEntity> = mFilmDao.getFavoriteTvShow()
 
     fun updateMovieDetail(duration: String, genres: String, movieId: Int) {
         mFilmDao.updateMovieByDetail(duration, genres, movieId)

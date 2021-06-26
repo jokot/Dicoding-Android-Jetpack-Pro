@@ -57,7 +57,6 @@ class AiringTodayTvShowFragment : Fragment() {
                 when(imageResource.status){
                     Status.LOADING ->{
                         binding?.progressBar?.visibility = View.VISIBLE
-                        binding?.rvTvShow?.visibility = View.GONE
                     }
                     Status.SUCCESS ->{
                         imageResource.data?.let { observeGetTvShow(it) }
@@ -76,12 +75,11 @@ class AiringTodayTvShowFragment : Fragment() {
             when (tvShows.status) {
                 Status.LOADING -> {
                     binding?.progressBar?.visibility = View.VISIBLE
-                    binding?.rvTvShow?.visibility = View.GONE
                 }
                 Status.SUCCESS -> {
                     binding?.progressBar?.visibility = View.GONE
-                    binding?.rvTvShow?.visibility = View.VISIBLE
-                    tvShowAdapter.setTvShows(tvShows.data, image)
+                    tvShowAdapter.setImage(image)
+                    tvShowAdapter.submitList(tvShows.data)
                     tvShowAdapter.notifyDataSetChanged()
                 }
                 Status.ERROR -> {

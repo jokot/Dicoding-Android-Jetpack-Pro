@@ -1,6 +1,7 @@
-package com.jokot.app.moviecatalogue.ui.movie
+package com.jokot.app.moviecatalogue.ui.favorite.movie
 
 import android.content.Intent
+import android.text.method.MovementMethod
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagedListAdapter
@@ -11,10 +12,11 @@ import com.bumptech.glide.request.RequestOptions
 import com.jokot.app.moviecatalogue.R
 import com.jokot.app.moviecatalogue.data.source.local.entity.ImageEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.MovieEntity
-import com.jokot.app.moviecatalogue.databinding.ItemsMovieBinding
+import com.jokot.app.moviecatalogue.databinding.ItemsFavoriteMovieBinding
 import com.jokot.app.moviecatalogue.ui.detail.movie.DetailMovieActivity
 
-class MovieAdapter : PagedListAdapter<MovieEntity, MovieAdapter.MovieViewHolder>(DIFF_CALLBACK) {
+class FavoriteMovieAdapter(private val callback: FavoriteMovieFragmentCallback) :
+    PagedListAdapter<MovieEntity, FavoriteMovieAdapter.FavoriteMovieViewHolder>(DIFF_CALLBACK) {
     private lateinit var image: ImageEntity
 
     companion object {
@@ -36,20 +38,22 @@ class MovieAdapter : PagedListAdapter<MovieEntity, MovieAdapter.MovieViewHolder>
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): MovieViewHolder {
-        val itemsMovieBinding =
-            ItemsMovieBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return MovieViewHolder(itemsMovieBinding)
+    ): FavoriteMovieViewHolder {
+        val itemsFavoriteMovieBinding =
+            ItemsFavoriteMovieBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return FavoriteMovieViewHolder(itemsFavoriteMovieBinding)
     }
 
-    override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: FavoriteMovieViewHolder, position: Int) {
         val movie = getItem(position)
         if (movie != null) {
             holder.bind(movie, image)
         }
     }
 
-    class MovieViewHolder(private val binding: ItemsMovieBinding) :
+    fun getSwipedData(swipedPosition: Int): MovieEntity? = getItem(swipedPosition)
+
+    inner class FavoriteMovieViewHolder(private val binding: ItemsFavoriteMovieBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(movie: MovieEntity, image: ImageEntity) {
             with(binding) {
@@ -62,6 +66,7 @@ class MovieAdapter : PagedListAdapter<MovieEntity, MovieAdapter.MovieViewHolder>
                     itemView.context.startActivity(intent)
                 }
                 val posterPath = image.secureBaseUrl + image.posterSize + movie.posterPath
+                imgShare.setOnClickListener { callback.onShareClick(movie) }
                 Glide.with(itemView.context)
                     .load(posterPath)
                     .apply(

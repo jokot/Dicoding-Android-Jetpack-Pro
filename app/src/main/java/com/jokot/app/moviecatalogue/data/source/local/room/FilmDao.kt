@@ -1,6 +1,7 @@
 package com.jokot.app.moviecatalogue.data.source.local.room
 
 import androidx.lifecycle.LiveData
+import androidx.paging.DataSource
 import androidx.room.*
 import com.jokot.app.moviecatalogue.data.source.local.entity.ImageEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.MovieEntity
@@ -20,34 +21,34 @@ interface FilmDao {
     fun getTvShowById(tvShowId: Int): LiveData<TvShowEntity>
 
     @Query("SELECT * FROM movie_entities WHERE isNowPlaying = 1")
-    fun getNowPlayingMovies(): LiveData<List<MovieEntity>>
+    fun getNowPlayingMovies(): DataSource.Factory<Int, MovieEntity>
 
     @Query("SELECT * FROM movie_entities WHERE isPopular = 1")
-    fun getPopularMovies(): LiveData<List<MovieEntity>>
+    fun getPopularMovies(): DataSource.Factory<Int, MovieEntity>
 
     @Query("SELECT * FROM movie_entities WHERE isTopRated = 1")
-    fun getTopRatedMovies(): LiveData<List<MovieEntity>>
+    fun getTopRatedMovies(): DataSource.Factory<Int, MovieEntity>
 
     @Query("SELECT * FROM movie_entities WHERE isUpcoming = 1")
-    fun getUpcomingMovies(): LiveData<List<MovieEntity>>
+    fun getUpcomingMovies(): DataSource.Factory<Int, MovieEntity>
 
     @Query("SELECT * FROM tv_show_entities WHERE isOnAir = 1")
-    fun getOnTheAirTvShows(): LiveData<List<TvShowEntity>>
+    fun getOnTheAirTvShows(): DataSource.Factory<Int, TvShowEntity>
 
     @Query("SELECT * FROM tv_show_entities WHERE isPopular = 1")
-    fun getPopularTvShows(): LiveData<List<TvShowEntity>>
+    fun getPopularTvShows(): DataSource.Factory<Int, TvShowEntity>
 
     @Query("SELECT * FROM tv_show_entities WHERE isTopRated = 1")
-    fun getTopRatedTvShows(): LiveData<List<TvShowEntity>>
+    fun getTopRatedTvShows(): DataSource.Factory<Int, TvShowEntity>
 
     @Query("SELECT * FROM tv_show_entities WHERE isAiringToday = 1")
-    fun getAiringTodayTvShows(): LiveData<List<TvShowEntity>>
+    fun getAiringTodayTvShows(): DataSource.Factory<Int, TvShowEntity>
 
     @Query("SELECT * FROM movie_entities WHERE favorite = 1")
-    fun getFavoriteMovie(): LiveData<List<MovieEntity>>
+    fun getFavoriteMovie(): DataSource.Factory<Int, MovieEntity>
 
     @Query("SELECT * FROM tv_show_entities WHERE favorite = 1")
-    fun getFavoriteTvShow(): LiveData<List<TvShowEntity>>
+    fun getFavoriteTvShow(): DataSource.Factory<Int, TvShowEntity>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertImage(image: ImageEntity)
