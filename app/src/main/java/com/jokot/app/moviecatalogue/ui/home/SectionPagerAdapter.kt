@@ -6,7 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.jokot.app.moviecatalogue.R
-import com.jokot.app.moviecatalogue.ui.bookmark.FavoriteFragment
+import com.jokot.app.moviecatalogue.ui.favorite.FavoriteFragment
 import com.jokot.app.moviecatalogue.ui.movie.MovieFragment
 import com.jokot.app.moviecatalogue.ui.tv.TvShowFragment
 

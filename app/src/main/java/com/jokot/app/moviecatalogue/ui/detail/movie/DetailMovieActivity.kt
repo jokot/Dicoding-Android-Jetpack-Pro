@@ -146,7 +146,7 @@ class DetailMovieActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.action_favorite){
+        if (item.itemId == R.id.action_favorite) {
             viewModel.setFavorite()
             return true
         }

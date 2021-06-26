@@ -25,13 +25,14 @@ class NowPlayingMovieFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _fragmentNowPlayingMovieBinding = FragmentNowPlayingBinding.inflate(layoutInflater, container, false)
+        _fragmentNowPlayingMovieBinding =
+            FragmentNowPlayingBinding.inflate(layoutInflater, container, false)
         return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (activity != null){
+        if (activity != null) {
             val factory = ViewModelFactory.getInstance(requireActivity())
             val viewModel = ViewModelProvider(this, factory)[MovieViewModel::class.java]
 
@@ -39,7 +40,7 @@ class NowPlayingMovieFragment : Fragment() {
 
             binding?.progressBar?.visibility = View.VISIBLE
             binding?.rvMovie?.visibility = View.GONE
-            viewModel.getConfiguration().observe(viewLifecycleOwner, {images ->
+            viewModel.getConfiguration().observe(viewLifecycleOwner, { images ->
                 viewModel.getNowPlayingMovies().observe(viewLifecycleOwner, { movies ->
                     when (movies.status) {
                         Status.LOADING -> {

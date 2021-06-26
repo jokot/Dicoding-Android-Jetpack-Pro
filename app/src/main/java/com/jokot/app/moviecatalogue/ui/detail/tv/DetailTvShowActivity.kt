@@ -115,9 +115,9 @@ class DetailTvShowActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_detail, menu)
         this.menu = menu
-        viewModel.tvShowDetail.observe(this,{ tvShowDetailResource ->
-            if (tvShowDetailResource != null ){
-                when(tvShowDetailResource.status){
+        viewModel.tvShowDetail.observe(this, { tvShowDetailResource ->
+            if (tvShowDetailResource != null) {
+                when (tvShowDetailResource.status) {
                     Status.LOADING -> {
                         activityDetailTvShowBinding.progressBar.visibility =
                             View.VISIBLE

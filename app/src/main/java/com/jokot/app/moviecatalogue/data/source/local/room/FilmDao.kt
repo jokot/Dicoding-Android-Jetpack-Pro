@@ -52,49 +52,49 @@ interface FilmDao {
     fun insertTvShows(tvSows: List<TvShowEntity>)
 
     @Transaction
-    fun insertOrUpdateNowPlayingMovie(movies: List<MovieEntity>, movieIds: List<Int>){
+    fun insertOrUpdateNowPlayingMovie(movies: List<MovieEntity>, movieIds: List<Int>) {
         insertMovies(movies)
         updateMovieIsNowPlaying(movieIds)
     }
 
     @Transaction
-    fun insertOrUpdatePopularMovie(movies: List<MovieEntity>, movieIds: List<Int>){
+    fun insertOrUpdatePopularMovie(movies: List<MovieEntity>, movieIds: List<Int>) {
         insertMovies(movies)
         updateMovieIsPopular(movieIds)
     }
 
     @Transaction
-    fun insertOrUpdateTopRatedMovie(movies: List<MovieEntity>, movieIds: List<Int>){
+    fun insertOrUpdateTopRatedMovie(movies: List<MovieEntity>, movieIds: List<Int>) {
         insertMovies(movies)
         updateMovieIsTopRated(movieIds)
     }
 
     @Transaction
-    fun insertOrUpdateUpcomingMovie(movies: List<MovieEntity>, movieIds: List<Int>){
+    fun insertOrUpdateUpcomingMovie(movies: List<MovieEntity>, movieIds: List<Int>) {
         insertMovies(movies)
         updateMovieIsUpcoming(movieIds)
     }
 
     @Transaction
-    fun insertOrUpdateOnTheAirTvShow(tvShows: List<TvShowEntity>, tvShowIds: List<Int>){
+    fun insertOrUpdateOnTheAirTvShow(tvShows: List<TvShowEntity>, tvShowIds: List<Int>) {
         insertTvShows(tvShows)
         updateTvShowIsOnTheAir(tvShowIds)
     }
 
     @Transaction
-    fun insertOrUpdatePopularTvShow(tvShows: List<TvShowEntity>, tvShowIds: List<Int>){
+    fun insertOrUpdatePopularTvShow(tvShows: List<TvShowEntity>, tvShowIds: List<Int>) {
         insertTvShows(tvShows)
         updateTvShowIsPopular(tvShowIds)
     }
 
     @Transaction
-    fun insertOrUpdateTopRatedTvShow(tvShows: List<TvShowEntity>, tvShowIds: List<Int>){
+    fun insertOrUpdateTopRatedTvShow(tvShows: List<TvShowEntity>, tvShowIds: List<Int>) {
         insertTvShows(tvShows)
         updateTvShowIsTopRated(tvShowIds)
     }
 
     @Transaction
-    fun insertOrUpdateAiringTodayTvShow(tvShows: List<TvShowEntity>, tvShowIds: List<Int>){
+    fun insertOrUpdateAiringTodayTvShow(tvShows: List<TvShowEntity>, tvShowIds: List<Int>) {
         insertTvShows(tvShows)
         updateTvShowIsAiringToday(tvShowIds)
     }

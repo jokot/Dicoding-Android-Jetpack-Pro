@@ -6,11 +6,11 @@ import java.util.*
 
 @SuppressLint("SimpleDateFormat")
 fun convertDateFormat(dateString: String?): String {
-    return if (dateString !=null){
+    return if (dateString != null) {
         val formatter = SimpleDateFormat("yyyy-mm-dd")
         val date = formatter.parse(dateString) as Date
         SimpleDateFormat("MMM dd, yyyy").format(date)
-    }else{
+    } else {
         "Not available"
     }
 }

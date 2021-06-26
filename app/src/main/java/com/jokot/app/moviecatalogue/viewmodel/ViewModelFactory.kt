@@ -5,9 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.jokot.app.moviecatalogue.data.FilmRepository
 import com.jokot.app.moviecatalogue.di.Injection
-import com.jokot.app.moviecatalogue.ui.bookmark.BookmarkViewModel
 import com.jokot.app.moviecatalogue.ui.detail.movie.DetailMovieViewModel
 import com.jokot.app.moviecatalogue.ui.detail.tv.DetailTvShowViewModel
+import com.jokot.app.moviecatalogue.ui.favorite.FavoriteViewModel
 import com.jokot.app.moviecatalogue.ui.movie.MovieViewModel
 import com.jokot.app.moviecatalogue.ui.tv.TvShowViewModel
 
@@ -41,8 +41,8 @@ class ViewModelFactory private constructor(private val mFilmRepository: FilmRepo
             modelClass.isAssignableFrom(DetailTvShowViewModel::class.java) -> {
                 DetailTvShowViewModel(mFilmRepository) as T
             }
-            modelClass.isAssignableFrom(BookmarkViewModel::class.java) -> {
-                BookmarkViewModel(mFilmRepository) as T
+            modelClass.isAssignableFrom(FavoriteViewModel::class.java) -> {
+                FavoriteViewModel(mFilmRepository) as T
             }
             else -> throw Throwable("Unknown ViewModel class: " + modelClass.name)
         }

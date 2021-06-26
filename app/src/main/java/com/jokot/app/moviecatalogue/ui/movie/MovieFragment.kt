@@ -33,18 +33,10 @@ class MovieFragment : Fragment() {
 
             binding?.chipGroup?.setOnCheckedChangeListener { _, checkedId ->
                 when (checkedId) {
-                    binding?.chip1?.id -> {
-                        changeFragment(NowPlayingMovieFragment())
-                    }
-                    binding?.chip2?.id -> {
-                        changeFragment(PopularMovieFragment())
-                    }
-                    binding?.chip3?.id -> {
-                        changeFragment(TopRatedMovieFragment())
-                    }
-                    binding?.chip4?.id -> {
-                        changeFragment(UpcomingMovieFragment())
-                    }
+                    binding?.chip1?.id -> changeFragment(NowPlayingMovieFragment())
+                    binding?.chip2?.id -> changeFragment(PopularMovieFragment())
+                    binding?.chip3?.id -> changeFragment(TopRatedMovieFragment())
+                    binding?.chip4?.id -> changeFragment(UpcomingMovieFragment())
                 }
             }
         }
