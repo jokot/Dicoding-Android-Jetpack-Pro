@@ -6,7 +6,6 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.jokot.app.moviecatalogue.data.FilmRepository
 import com.jokot.app.moviecatalogue.data.source.local.entity.ImagesEntity
-import com.jokot.app.moviecatalogue.data.source.local.entity.TvShowDetailEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.TvShowEntity
 import com.jokot.app.moviecatalogue.vo.Resource
 
@@ -24,7 +23,7 @@ class DetailTvShowViewModel(private val filmRepository: FilmRepository) : ViewMo
             filmRepository.getTvShowDetail(mTvShowId)
         }
 
-    fun setBookmark() {
+    fun setFavorite() {
         val tvShowDetailResource = tvShowDetail.value
 
         if (tvShowDetailResource != null) {
@@ -32,8 +31,8 @@ class DetailTvShowViewModel(private val filmRepository: FilmRepository) : ViewMo
 
             tvShowDetailEntity?.let {
 
-                val newState = !it.bookmarked
-                filmRepository.setTvShowBookmark(it, newState)
+                val newState = !it.favorite
+                filmRepository.setTvShowFavorite(it, newState)
             }
         }
     }

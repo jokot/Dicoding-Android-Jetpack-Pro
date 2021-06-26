@@ -39,11 +39,11 @@ interface FilmDao {
     @Query("SELECT * FROM tv_show_entities WHERE isAiringToday = 1")
     fun getAiringTodayTvShows(): LiveData<List<TvShowEntity>>
 
-    @Query("SELECT * FROM movie_entities WHERE bookmarked = 1")
-    fun getBookmarkedMovie(): LiveData<List<MovieEntity>>
+    @Query("SELECT * FROM movie_entities WHERE favorite = 1")
+    fun getFavoriteMovie(): LiveData<List<MovieEntity>>
 
-    @Query("SELECT * FROM tv_show_entities WHERE bookmarked = 1")
-    fun getBookmarkedTvShow(): LiveData<List<TvShowEntity>>
+    @Query("SELECT * FROM tv_show_entities WHERE favorite = 1")
+    fun getFavoriteTvShow(): LiveData<List<TvShowEntity>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertMovies(movies: List<MovieEntity>)

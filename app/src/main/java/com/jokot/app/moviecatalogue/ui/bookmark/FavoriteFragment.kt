@@ -7,15 +7,15 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.jokot.app.moviecatalogue.databinding.FragmentBookmarkBinding
+import com.jokot.app.moviecatalogue.databinding.FragmentFavoriteBinding
 import com.jokot.app.moviecatalogue.ui.movie.MovieAdapter
 import com.jokot.app.moviecatalogue.ui.tv.TvShowAdapter
 import com.jokot.app.moviecatalogue.viewmodel.ViewModelFactory
 
 
-class BookmarkFragment : Fragment() {
-    private var _fragmentBookmarkBinding: FragmentBookmarkBinding? = null
-    private val binding get() = _fragmentBookmarkBinding
+class FavoriteFragment : Fragment() {
+    private var _fragmentFavoriteBinding: FragmentFavoriteBinding? = null
+    private val binding get() = _fragmentFavoriteBinding
 
     private lateinit var movieAdapter: MovieAdapter
     private lateinit var tvShowAdapter: TvShowAdapter
@@ -25,7 +25,7 @@ class BookmarkFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        _fragmentBookmarkBinding = FragmentBookmarkBinding.inflate(layoutInflater, container, false)
+        _fragmentFavoriteBinding = FragmentFavoriteBinding.inflate(layoutInflater, container, false)
         return binding?.root
     }
 

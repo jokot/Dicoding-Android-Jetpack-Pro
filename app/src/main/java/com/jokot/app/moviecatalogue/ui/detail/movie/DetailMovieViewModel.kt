@@ -6,7 +6,6 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.jokot.app.moviecatalogue.data.FilmRepository
 import com.jokot.app.moviecatalogue.data.source.local.entity.ImagesEntity
-import com.jokot.app.moviecatalogue.data.source.local.entity.MovieDetailEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.MovieEntity
 import com.jokot.app.moviecatalogue.vo.Resource
 
@@ -25,16 +24,16 @@ class DetailMovieViewModel(private val filmRepository: FilmRepository) :
             filmRepository.getMovieDetail(mMovieId)
         }
 
-    fun setBookmark() {
+    fun setFavorite() {
         val movieDetailResource = movieDetail.value
         if (movieDetailResource != null) {
             val movieDetailEntity = movieDetailResource.data
 
             movieDetailEntity?.let {
 
-                val newState = !it.bookmarked
+                val newState = !it.favorite
 
-                filmRepository.setMovieBookmark(it, newState)
+                filmRepository.setMovieFavorite(it, newState)
             }
         }
     }

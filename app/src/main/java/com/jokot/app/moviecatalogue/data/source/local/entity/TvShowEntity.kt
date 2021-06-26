@@ -31,8 +31,8 @@ data class TvShowEntity(
     @ColumnInfo(name = "bannerPath")
     var bannerPath: String?,
 
-    @ColumnInfo(name = "bookmarked")
-    var bookmarked: Boolean = false,
+    @ColumnInfo(name = "favorite")
+    var favorite: Boolean = false,
 
     @ColumnInfo(name = "isOnAir")
     var isOnAir: Boolean = false,

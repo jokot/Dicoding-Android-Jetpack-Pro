@@ -12,7 +12,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.jokot.app.moviecatalogue.R
 import com.jokot.app.moviecatalogue.data.source.local.entity.ImagesEntity
-import com.jokot.app.moviecatalogue.data.source.local.entity.TvShowDetailEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.TvShowEntity
 import com.jokot.app.moviecatalogue.databinding.ActivityDetailTvShowBinding
 import com.jokot.app.moviecatalogue.databinding.ContentDetailTvShowBinding
@@ -127,7 +126,7 @@ class DetailTvShowActivity : AppCompatActivity() {
                     Status.SUCCESS -> if (tvShowDetailResource.data != null) {
                         activityDetailTvShowBinding.progressBar.visibility = View.GONE
                         contentDetailTvShowBinding.root.visibility = View.VISIBLE
-                        val state = tvShowDetailResource.data.bookmarked
+                        val state = tvShowDetailResource.data.favorite
                         setBookmarkState(state)
                     }
                     Status.ERROR -> {
@@ -149,7 +148,7 @@ class DetailTvShowActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.action_favorite) {
-            viewModel.setBookmark()
+            viewModel.setFavorite()
             return true
         }
         return super.onOptionsItemSelected(item)

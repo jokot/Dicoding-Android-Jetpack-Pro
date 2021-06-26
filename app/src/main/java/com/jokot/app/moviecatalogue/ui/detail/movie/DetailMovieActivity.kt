@@ -12,7 +12,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.jokot.app.moviecatalogue.R
 import com.jokot.app.moviecatalogue.data.source.local.entity.ImagesEntity
-import com.jokot.app.moviecatalogue.data.source.local.entity.MovieDetailEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.MovieEntity
 import com.jokot.app.moviecatalogue.databinding.ActivityDetailMovieBinding
 import com.jokot.app.moviecatalogue.databinding.ContentDetailMovieBinding
@@ -127,7 +126,7 @@ class DetailMovieActivity : AppCompatActivity() {
                     Status.SUCCESS -> if (movieDetailResource.data != null) {
                         activityDetailMovieBinding.progressBar.visibility = View.GONE
                         contentDetailMovieBinding.root.visibility = View.VISIBLE
-                        val state = movieDetailResource.data.bookmarked
+                        val state = movieDetailResource.data.favorite
                         setBookmarkState(state)
                     }
                     Status.ERROR -> {
@@ -148,7 +147,7 @@ class DetailMovieActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.action_favorite){
-            viewModel.setBookmark()
+            viewModel.setFavorite()
             return true
         }
         return super.onOptionsItemSelected(item)
