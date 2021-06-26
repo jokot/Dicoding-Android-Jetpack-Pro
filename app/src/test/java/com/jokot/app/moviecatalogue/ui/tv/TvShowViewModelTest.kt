@@ -3,6 +3,7 @@ package com.jokot.app.moviecatalogue.ui.tv
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.paging.PagedList
 import com.jokot.app.moviecatalogue.data.FilmRepository
 import com.jokot.app.moviecatalogue.data.source.local.entity.ImageEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.TvShowEntity
@@ -33,10 +34,13 @@ class TvShowViewModelTest {
     private lateinit var filmRepository: FilmRepository
 
     @Mock
-    private lateinit var observerTvShows: Observer<Resource<List<TvShowEntity>>>
+    private lateinit var observerTvShows: Observer<Resource<PagedList<TvShowEntity>>>
 
     @Mock
     private lateinit var observerImage: Observer<Resource<ImageEntity>>
+
+    @Mock
+    private lateinit var pagedList: PagedList<TvShowEntity>
 
     @Before
     fun setup() {
@@ -61,8 +65,9 @@ class TvShowViewModelTest {
 
     @Test
     fun getOnTheAirTvShow() {
-        val dummyTvShows = Resource.success(dummyTvShows)
-        val tvShows = MutableLiveData<Resource<List<TvShowEntity>>>()
+        val dummyTvShows = Resource.success(pagedList)
+        `when`(dummyTvShows.data?.size).thenReturn(this.dummyTvShows.size)
+        val tvShows = MutableLiveData<Resource<PagedList<TvShowEntity>>>()
         tvShows.value = dummyTvShows
 
         `when`(filmRepository.getOnTheAirTvShows()).thenReturn(tvShows)
@@ -77,8 +82,9 @@ class TvShowViewModelTest {
 
     @Test
     fun getPopularTvShow() {
-        val dummyTvShows = Resource.success(dummyTvShows)
-        val tvShows = MutableLiveData<Resource<List<TvShowEntity>>>()
+        val dummyTvShows = Resource.success(pagedList)
+        `when`(dummyTvShows.data?.size).thenReturn(this.dummyTvShows.size)
+        val tvShows = MutableLiveData<Resource<PagedList<TvShowEntity>>>()
         tvShows.value = dummyTvShows
 
         `when`(filmRepository.getPopularTvShows()).thenReturn(tvShows)
@@ -93,8 +99,9 @@ class TvShowViewModelTest {
 
     @Test
     fun getTopRatedTvShow() {
-        val dummyTvShows = Resource.success(dummyTvShows)
-        val tvShows = MutableLiveData<Resource<List<TvShowEntity>>>()
+        val dummyTvShows = Resource.success(pagedList)
+        `when`(dummyTvShows.data?.size).thenReturn(this.dummyTvShows.size)
+        val tvShows = MutableLiveData<Resource<PagedList<TvShowEntity>>>()
         tvShows.value = dummyTvShows
 
         `when`(filmRepository.getTopRatedTvShows()).thenReturn(tvShows)
@@ -109,8 +116,9 @@ class TvShowViewModelTest {
 
     @Test
     fun getAiringTodayTvShow() {
-        val dummyTvShows = Resource.success(dummyTvShows)
-        val tvShows = MutableLiveData<Resource<List<TvShowEntity>>>()
+        val dummyTvShows = Resource.success(pagedList)
+        `when`(dummyTvShows.data?.size).thenReturn(this.dummyTvShows.size)
+        val tvShows = MutableLiveData<Resource<PagedList<TvShowEntity>>>()
         tvShows.value = dummyTvShows
 
         `when`(filmRepository.getAiringTodayTvShows()).thenReturn(tvShows)

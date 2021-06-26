@@ -3,6 +3,7 @@ package com.jokot.app.moviecatalogue.ui.movie
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.paging.PagedList
 import com.jokot.app.moviecatalogue.data.FilmRepository
 import com.jokot.app.moviecatalogue.data.source.local.entity.ImageEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.MovieEntity
@@ -33,10 +34,13 @@ class MovieViewModelTest {
     private lateinit var filmRepository: FilmRepository
 
     @Mock
-    private lateinit var observerMovies: Observer<Resource<List<MovieEntity>>>
+    private lateinit var observerMovies: Observer<Resource<PagedList<MovieEntity>>>
 
     @Mock
     private lateinit var observerImage: Observer<Resource<ImageEntity>>
+
+    @Mock
+    private lateinit var pagedList: PagedList<MovieEntity>
 
 
     @Before
@@ -62,8 +66,10 @@ class MovieViewModelTest {
 
     @Test
     fun getNowPlayingMovies() {
-        val dummyMovies = Resource.success(dummyMovies)
-        val movies = MutableLiveData<Resource<List<MovieEntity>>>()
+        val dummyMovies = Resource.success(pagedList)
+        `when`(dummyMovies.data?.size).thenReturn(this.dummyMovies.size)
+
+        val movies = MutableLiveData<Resource<PagedList<MovieEntity>>>()
         movies.value = dummyMovies
 
         `when`(filmRepository.getNowPlayingMovies()).thenReturn(movies)
@@ -78,8 +84,10 @@ class MovieViewModelTest {
 
     @Test
     fun getPopularMovies() {
-        val dummyMovies = Resource.success(dummyMovies)
-        val movies = MutableLiveData<Resource<List<MovieEntity>>>()
+        val dummyMovies = Resource.success(pagedList)
+        `when`(dummyMovies.data?.size).thenReturn(this.dummyMovies.size)
+
+        val movies = MutableLiveData<Resource<PagedList<MovieEntity>>>()
         movies.value = dummyMovies
 
         `when`(filmRepository.getPopularMovies()).thenReturn(movies)
@@ -94,8 +102,10 @@ class MovieViewModelTest {
 
     @Test
     fun getTopRatedMovies() {
-        val dummyMovies = Resource.success(dummyMovies)
-        val movies = MutableLiveData<Resource<List<MovieEntity>>>()
+        val dummyMovies = Resource.success(pagedList)
+        `when`(dummyMovies.data?.size).thenReturn(this.dummyMovies.size)
+
+        val movies = MutableLiveData<Resource<PagedList<MovieEntity>>>()
         movies.value = dummyMovies
 
         `when`(filmRepository.getTopRatedMovies()).thenReturn(movies)
@@ -110,8 +120,10 @@ class MovieViewModelTest {
 
     @Test
     fun getUpcomingMovies() {
-        val dummyMovies = Resource.success(dummyMovies)
-        val movies = MutableLiveData<Resource<List<MovieEntity>>>()
+        val dummyMovies = Resource.success(pagedList)
+        `when`(dummyMovies.data?.size).thenReturn(this.dummyMovies.size)
+
+        val movies = MutableLiveData<Resource<PagedList<MovieEntity>>>()
         movies.value = dummyMovies
 
         `when`(filmRepository.getUpcomingMovies()).thenReturn(movies)

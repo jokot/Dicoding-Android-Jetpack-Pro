@@ -3,6 +3,7 @@ package com.jokot.app.moviecatalogue.ui.favorite
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.paging.PagedList
 import com.jokot.app.moviecatalogue.data.FilmRepository
 import com.jokot.app.moviecatalogue.data.source.local.entity.ImageEntity
 import com.jokot.app.moviecatalogue.data.source.local.entity.MovieEntity
@@ -34,10 +35,10 @@ class FavoriteViewModelTest {
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
     @Mock
-    private lateinit var observerMovies: Observer<List<MovieEntity>>
+    private lateinit var observerMovies: Observer<PagedList<MovieEntity>>
 
     @Mock
-    private lateinit var observerTvShows: Observer<List<TvShowEntity>>
+    private lateinit var observerTvShows: Observer<PagedList<TvShowEntity>>
 
     @Mock
     private lateinit var filmRepository: FilmRepository
@@ -45,8 +46,14 @@ class FavoriteViewModelTest {
     @Mock
     private lateinit var observerImage: Observer<Resource<ImageEntity>>
 
+    @Mock
+    private lateinit var pagedListMovie: PagedList<MovieEntity>
 
-    @Before
+    @Mock
+    private lateinit var pagedListTvShow: PagedList<TvShowEntity>
+
+
+            @Before
     fun setup() {
         viewModel = FavoriteViewModel(filmRepository)
     }
@@ -69,7 +76,9 @@ class FavoriteViewModelTest {
 
     @Test
     fun getFavoriteMovies() {
-        val movies = MutableLiveData<List<MovieEntity>>()
+        val dummyMovies = pagedListMovie
+        `when`(dummyMovies.size).thenReturn(this.dummyMovies.size)
+        val movies = MutableLiveData<PagedList<MovieEntity>>()
         movies.value = dummyMovies
 
         `when`(filmRepository.getFavoriteMovie()).thenReturn(movies)
@@ -84,7 +93,9 @@ class FavoriteViewModelTest {
 
     @Test
     fun getFavoriteTvShows() {
-        val tvShows = MutableLiveData<List<TvShowEntity>>()
+        val dummyTvShows = pagedListTvShow
+        `when`(dummyTvShows.size).thenReturn(this.dummyTvShows.size)
+        val tvShows = MutableLiveData<PagedList<TvShowEntity>>()
         tvShows.value = dummyTvShows
 
         `when`(filmRepository.getFavoriteTvShow()).thenReturn(tvShows)
