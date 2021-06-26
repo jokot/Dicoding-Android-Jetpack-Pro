@@ -40,7 +40,7 @@ class TopRatedMovieFragment : Fragment() {
 
             movieAdapter = MovieAdapter()
 
-            binding?.progressBar?.visibility = View.GONE
+            binding?.progressBar?.visibility = View.VISIBLE
             binding?.rvMovie?.visibility = View.GONE
             viewModel.getConfiguration().observe(viewLifecycleOwner, { images ->
                 viewModel.getTopRatedMovies().observe(viewLifecycleOwner, { movies ->
