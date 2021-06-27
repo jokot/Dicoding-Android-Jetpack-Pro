@@ -64,6 +64,9 @@ class HomeActivityTest {
             )
         )
 
+        onView(withId(R.id.img_poster)).check(matches(isDisplayed()))
+        onView(withId(R.id.img_banner)).check(matches(isDisplayed()))
+        onView(withId(R.id.text_title)).check(matches(isDisplayed()))
         onView(withId(R.id.text_title)).check(matches(isDisplayed()))
         onView(withId(R.id.text_overview)).check(matches(isDisplayed()))
         onView(withId(R.id.text_date)).check(matches(isDisplayed()))
@@ -108,6 +111,8 @@ class HomeActivityTest {
             )
         )
 
+        onView(withId(R.id.img_poster)).check(matches(isDisplayed()))
+        onView(withId(R.id.img_banner)).check(matches(isDisplayed()))
         onView(withId(R.id.text_title)).check(matches(isDisplayed()))
         onView(withId(R.id.text_overview)).check(matches(isDisplayed()))
         onView(withId(R.id.text_date)).check(matches(isDisplayed()))
@@ -147,8 +152,17 @@ class HomeActivityTest {
                 click()
             )
         )
+
+        onView(withId(R.id.img_poster)).check(matches(isDisplayed()))
+        onView(withId(R.id.img_banner)).check(matches(isDisplayed()))
         onView(withId(R.id.text_title)).check(matches(isDisplayed()))
+        onView(withId(R.id.text_overview)).check(matches(isDisplayed()))
         onView(withId(R.id.text_date)).check(matches(isDisplayed()))
+        onView(withId(R.id.text_genre)).check(matches(isDisplayed()))
+        onView(withId(R.id.text_duration)).check(matches(isDisplayed()))
+        onView(withId(R.id.text_score)).check(matches(isDisplayed()))
+        onView(withId(R.id.text_year)).check(matches(isDisplayed()))
+
         onView(withId(R.id.action_favorite)).perform(click())
         onView(isRoot()).perform(ViewActions.pressBack())
     }
@@ -184,8 +198,16 @@ class HomeActivityTest {
                 click()
             )
         )
+        onView(withId(R.id.img_poster)).check(matches(isDisplayed()))
+        onView(withId(R.id.img_banner)).check(matches(isDisplayed()))
         onView(withId(R.id.text_title)).check(matches(isDisplayed()))
+        onView(withId(R.id.text_overview)).check(matches(isDisplayed()))
         onView(withId(R.id.text_date)).check(matches(isDisplayed()))
+        onView(withId(R.id.text_genre)).check(matches(isDisplayed()))
+        onView(withId(R.id.text_duration)).check(matches(isDisplayed()))
+        onView(withId(R.id.text_score)).check(matches(isDisplayed()))
+        onView(withId(R.id.text_year)).check(matches(isDisplayed()))
+
         onView(withId(R.id.action_favorite)).perform(click())
         onView(isRoot()).perform(ViewActions.pressBack())
     }
